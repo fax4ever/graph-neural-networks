@@ -1,0 +1,17 @@
+[project]
+name = "pearl-gnn"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Fabio Massimo Ercoli", email = "fabiomassimo.ercoli@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+pearl-gnn = "pearl_gnn:main"
+
+[build-system]
+requires = ["uv_build>=0.8.17,<0.9.0"]
+build-backend = "uv_build"
