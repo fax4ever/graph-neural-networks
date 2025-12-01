@@ -1,11 +1,9 @@
-import numpy as np
 import torch
-from torch import tensor
 
 from src.models import GNN
 
 class ModelParams:
-    def __init__(self, gnn, residual, jk, graph_pooling):
+    def __init__(self, gnn, residual, jk, graph_pooling, test_dir_name):
         super().__init__()
         self.gnn = gnn
         self.residual = residual
@@ -14,6 +12,15 @@ class ModelParams:
         self.drop_ratio = 0.5
         self.num_layer = 5
         self.emb_dim = 300
+
+        if test_dir_name == 'D':
+            self.drop_ratio = 0.8
+            self.num_layer = 6
+            self.emb_dim = 350
+        elif test_dir_name == 'B':
+            self.drop_ratio = 0.6
+            self.num_layer = 6
+            self.emb_dim = 350
 
     def create_model(self):
         if self.gnn == 'gin':
@@ -34,35 +41,31 @@ class ModelParams:
                    drop_ratio=self.drop_ratio, virtual_node=virtual_node, residual=self.residual, JK=self.jk,
                    graph_pooling=self.graph_pooling)
 
-class TrainingParams:
-    def __init__(self, optimizer):
-        super().__init__()
-        self.optimizer = optimizer # TODO use it for training
-        self.batch_size = 32 # TODO use it for training
-        self.epochs = 40 # TODO use it for training
-        self.noise_prob = 0.2 # TODO use it for training
-
 class MetaModel(torch.nn.Module):
     def __init__(self, num_of_input_models):
         super(MetaModel, self).__init__()
         initial_value = 1 / num_of_input_models
-        self.alpha = torch.nn.Parameter(torch.Tensor([initial_value]))
-        self.beta = torch.nn.Parameter(torch.Tensor([initial_value]))
+        self.alpha = torch.nn.Parameter(torch.Tensor([initial_value for _ in range(0,6)]))
+        self.beta = torch.nn.Parameter(torch.Tensor([initial_value for _ in range(0,6)]))
+        self.gamma = torch.nn.Parameter(torch.Tensor([initial_value for _ in range(0,6)]))
+        self.delta = torch.nn.Parameter(torch.Tensor([initial_value for _ in range(0,6)]))
 
     def forward(self, x):
         dim = len(x.size()) - 2
-        a, b = torch.unbind(x, dim)
-        return a * self.alpha + b * self.beta
+        a, b, c, d = torch.unbind(x, dim)
+        return a * self.alpha + b * self.beta + c * self.gamma + d * self.delta
 
 class PredictionDataset(torch.utils.data.Dataset):
-    def __init__(self, gcn_predictions, gin_predictions, output_labels):
+    def __init__(self, gcn_predictions, gin_predictions, gcn_bis_predictions, gin_bis_predictions, output_labels):
         super(PredictionDataset).__init__()
-        self.gcn_predictions = gcn_predictions # to apply the
+        self.gcn_predictions = gcn_predictions
         self.gin_predictions = gin_predictions
+        self.gcn_bis_predictions = gcn_bis_predictions
+        self.gin_bis_predictions = gin_bis_predictions
         self.output_labels = output_labels
 
     def __getitem__(self, index):
-        x = torch.stack([self.gcn_predictions[index], self.gin_predictions[index]])
+        x = torch.stack([self.gcn_predictions[index], self.gin_predictions[index], self.gcn_bis_predictions[index], self.gin_bis_predictions[index]])
         y = self.output_labels[index]
         return x, y
 
