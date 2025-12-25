@@ -1,6 +1,13 @@
+import torch
+
+
 class MyClient:
     def __init__(self):
-        self.name = "John Doe"
+        if torch.backends.mps.is_available():
+            self.device = torch.device("mps")
+        else:
+            self.device = torch.device("cpu")
 
-    def say_hello(self):
-        print(f"Hello, my name is {self.name}")
+
+    def info(self):
+        print(f"Device: {self.device}")

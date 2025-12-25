@@ -171,3 +171,6 @@ cython_debug/
 ### JetBrains ###
 .idea/
 *.iml
+
+.DS_Store
+*.json.gz

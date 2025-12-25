@@ -7,7 +7,11 @@ authors = [
     { name = "Fabio Massimo Ercoli", email = "fabiomassimo.ercoli@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "numpy>=2.4.0",
+    "torch>=2.9.1",
+    "torch-geometric>=2.7.0",
+]
 
 [project.scripts]
 pearl-gnn = "pearl_gnn:main"
