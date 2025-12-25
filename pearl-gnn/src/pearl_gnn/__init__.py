@@ -3,10 +3,9 @@ from pearl_gnn.load_dataset import load_datasets
 
 
 def main() -> None:
-    client = MyClient()
-    client.info()
+    pass
 
-    load_datasets()
+    # load_datasets()
 
     
 
