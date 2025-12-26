@@ -14,19 +14,21 @@ class TestLoadDatasets:
 
     def test_returns_tuple_of_datasets(self, datasets):
         """Test that load_datasets returns a tuple of two datasets."""
-        train_dataset, test_dataset = datasets
+        train_dataset, val_dataset, test_dataset = datasets
         assert isinstance(train_dataset, Dataset)
+        assert isinstance(val_dataset, Dataset)
         assert isinstance(test_dataset, Dataset)
 
     def test_datasets_not_empty(self, datasets):
-        """Test that both datasets contain graphs."""
-        train_dataset, test_dataset = datasets
+        """Test that all datasets contain graphs."""
+        train_dataset, val_dataset, test_dataset = datasets
         assert len(train_dataset) > 0
+        assert len(val_dataset) > 0
         assert len(test_dataset) > 0
 
     def test_sample_graph_has_required_attributes(self, datasets):
         """Test that sample graphs have the expected structure."""
-        train_dataset, _ = datasets
+        train_dataset, _, _ = datasets
         sample = train_dataset[0]
 
         assert sample.num_nodes > 0
@@ -36,7 +38,7 @@ class TestLoadDatasets:
 
     def test_node_features_shape(self, datasets):
         """Test that node features have correct shape."""
-        train_dataset, _ = datasets
+        train_dataset, _, _ = datasets
         sample = train_dataset[0]
 
         if sample.x is not None:
@@ -44,7 +46,7 @@ class TestLoadDatasets:
 
     def test_edge_attributes_exist(self, datasets):
         """Test that edge attributes are present."""
-        train_dataset, _ = datasets
+        train_dataset, _, _ = datasets
         sample = train_dataset[0]
 
         if sample.edge_attr is not None:

@@ -23,6 +23,7 @@ def load_datasets(root: str | None = None, subset: bool = True) -> Tuple[Dataset
     print(f"Using {'subset (12K)' if subset else 'full dataset (250K)'}")
 
     train_dataset: Dataset = ZINC(root=root, subset=subset, split="train")
+    val_dataset: Dataset = ZINC(root=root, subset=subset, split="val")
     test_dataset: Dataset = ZINC(root=root, subset=subset, split="test")
 
     print(f"Train dataset: {len(train_dataset)} graphs")
@@ -38,5 +39,5 @@ def load_datasets(root: str | None = None, subset: bool = True) -> Tuple[Dataset
         print(f"  - edge_attr shape: {sample.edge_attr.shape if sample.edge_attr is not None else None}")
         print(f"  - y (target): {sample.y}")
 
-    return train_dataset, test_dataset
+    return train_dataset, val_dataset, test_dataset
 

@@ -8,6 +8,10 @@ uv sync
 uv run script/main_zinc.py
 ```
 
+```bash
+uv run pytest
+```
+
 ## Alternative: Deep Learning Sapienza Hackaton dataset
 
 Download the dataset and copy the folders (A/B/C/D) at the root of this subproject (graph-neural-networks/pearl-gnn):
