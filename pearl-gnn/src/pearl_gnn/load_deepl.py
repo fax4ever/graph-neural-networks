@@ -4,8 +4,10 @@ import torch
 from torch_geometric.data import Data, Dataset
 from pathlib import Path
 
+from pearl_gnn.hyper_param import HyperParam
 
-def load_datasets():
+
+def load_datasets(hp: HyperParam):
     # Load train and test datasets
     data_dir = Path(__file__).parent.parent.parent / "A"
     train_path = data_dir / "train.json.gz"

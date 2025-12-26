@@ -4,8 +4,12 @@ import numpy as np
 
 
 class HyperParam:
+    device: torch.device
+    use_subset: bool = True
+    seed: int = 42
+
+    
     def __init__(self):
-        self.seed = 42
         if torch.backends.mps.is_available():
             self.device = torch.device("mps")
         elif torch.cuda.is_available():

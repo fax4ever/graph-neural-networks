@@ -6,6 +6,6 @@ if __name__ == "__main__":
     hyper_param = HyperParam()
     hyper_param.set_seed()
     
-    train_dataset, test_dataset = load_datasets()
+    train_dataset, test_dataset = load_datasets(hyper_param)
     for i in range(10):
         plot(train_dataset[i], save_path=f"graph_deepl_{i}.png")

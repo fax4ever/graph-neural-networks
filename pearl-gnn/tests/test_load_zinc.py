@@ -2,6 +2,7 @@ import pytest
 from torch_geometric.data import Dataset
 
 from pearl_gnn.load_zinc import load_datasets
+from pearl_gnn.hyper_param import HyperParam
 
 
 class TestLoadDatasets:
@@ -10,7 +11,7 @@ class TestLoadDatasets:
     @pytest.fixture(scope="class")
     def datasets(self):
         """Load datasets once for all tests in this class."""
-        return load_datasets()
+        return load_datasets(HyperParam())
 
     def test_returns_tuple_of_datasets(self, datasets):
         """Test that load_datasets returns a tuple of two datasets."""
