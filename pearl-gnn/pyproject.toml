@@ -18,6 +18,16 @@ dependencies = [
 [project.scripts]
 pearl-gnn = "pearl_gnn:main"
 
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:`torch_geometric.distributed` has been deprecated:DeprecationWarning",
+]
+
 [build-system]
 requires = ["uv_build>=0.8.17,<0.9.0"]
 build-backend = "uv_build"

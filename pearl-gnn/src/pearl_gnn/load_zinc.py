@@ -1,0 +1,42 @@
+from torch_geometric.datasets import ZINC
+from torch_geometric.data import Dataset
+from pathlib import Path
+from typing import Tuple
+
+
+def load_datasets(root: str | None = None, subset: bool = True) -> Tuple[Dataset, Dataset]:
+    """
+    Load the ZINC dataset from torch_geometric.
+
+    Args:
+        root: Root directory where the dataset should be saved.
+              Defaults to a 'data/ZINC' folder in the project root.
+        subset: If True, loads the 12K subset (default). If False, loads the full 250K dataset.
+
+    Returns:
+        Tuple of (train_dataset, test_dataset) of type torch_geometric.data.Dataset
+    """
+    if root is None:
+        root = str(Path(__file__).parent.parent.parent / "data" / "ZINC")
+
+    print(f"\nLoading ZINC dataset from: {root}")
+    print(f"Using {'subset (12K)' if subset else 'full dataset (250K)'}")
+
+    train_dataset: Dataset = ZINC(root=root, subset=subset, split="train")
+    test_dataset: Dataset = ZINC(root=root, subset=subset, split="test")
+
+    print(f"Train dataset: {len(train_dataset)} graphs")
+    print(f"Test dataset: {len(test_dataset)} graphs")
+
+    # Display sample graph info
+    if len(train_dataset) > 0:
+        sample = train_dataset[0]
+        print(f"\nSample graph structure:")
+        print(f"  - num_nodes: {sample.num_nodes}")
+        print(f"  - x (node features) shape: {sample.x.shape if sample.x is not None else None}")
+        print(f"  - edge_index shape: {sample.edge_index.shape}")
+        print(f"  - edge_attr shape: {sample.edge_attr.shape if sample.edge_attr is not None else None}")
+        print(f"  - y (target): {sample.y}")
+
+    return train_dataset, test_dataset
+

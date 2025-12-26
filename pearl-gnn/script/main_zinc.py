@@ -1,5 +1,5 @@
 from pearl_gnn.client import MyClient
-from pearl_gnn.load_dataset import load_datasets
+from pearl_gnn.load_zinc import load_datasets
 from pearl_gnn.visualize import plot
 
 if __name__ == "__main__":
