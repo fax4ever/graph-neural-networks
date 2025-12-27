@@ -1,7 +1,7 @@
 import pytest
 from torch_geometric.data import Dataset
 
-from pearl_gnn.load_zinc import load_datasets
+from pearl_gnn.dataset.load_zinc import load_datasets
 from pearl_gnn.hyper_param import HyperParam
 
 

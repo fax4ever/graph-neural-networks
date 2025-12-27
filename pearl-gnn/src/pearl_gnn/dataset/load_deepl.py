@@ -3,13 +3,13 @@ import json
 import torch
 from torch_geometric.data import Data, Dataset
 from pathlib import Path
-
+from torch.utils.data import random_split
 from pearl_gnn.hyper_param import HyperParam
 
 
 def load_datasets(hp: HyperParam):
     # Load train and test datasets
-    data_dir = Path(__file__).parent.parent.parent / "A"
+    data_dir = Path(__file__).parent.parent.parent.parent / "A"
     train_path = data_dir / "train.json.gz"
     test_path = data_dir / "test.json.gz"
 
@@ -36,7 +36,11 @@ def load_datasets(hp: HyperParam):
         print(f"  - edge_attr: {sample_test.edge_attr.shape if sample_test.edge_attr is not None else None}")
         print(f"  - y (label): {sample_test.y}")
 
-    return train_dataset, test_dataset
+    val_size = int(0.2 * len(train_dataset))
+    train_size = len(train_dataset) - val_size
+    generator = torch.Generator().manual_seed(hp.seed)
+    train_dataset, val_dataset = random_split(train_dataset, [train_size, val_size], generator=generator)
+    return train_dataset, val_dataset, test_dataset
 
 
 class GraphDataset(Dataset):

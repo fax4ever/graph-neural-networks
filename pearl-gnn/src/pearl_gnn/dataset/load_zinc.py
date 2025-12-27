@@ -19,7 +19,7 @@ def load_datasets(hp: HyperParam, root: str | None = None) -> Tuple[Dataset, Dat
         Tuple of (train_dataset, test_dataset) of type torch_geometric.data.Dataset
     """
     if root is None:
-        root = str(Path(__file__).parent.parent.parent / "data" / "ZINC")
+        root = str(Path(__file__).parent.parent.parent.parent / "data" / "ZINC")
 
     print(f"\nLoading ZINC dataset from: {root}")
     print(f"Using {'subset (12K)' if hp.use_subset else 'full dataset (250K)'}")

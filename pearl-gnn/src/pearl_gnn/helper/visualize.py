@@ -1,5 +1,7 @@
 """Visualize graphs from PyTorch Geometric Data objects."""
 
+from pathlib import Path
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -67,7 +69,10 @@ def plot_graph(
 
 
 def plot(data: Data, save_path: str):
-    """Plot a single PyTorch Geometric Data object and save it to a file."""
+    """Plot a single PyTorch Geometric Data object and save it to a file in the 'images' directory."""
+    images_dir = Path("images")
+    images_dir.mkdir(exist_ok=True)
+    
     plot_graph(data)
-    plt.savefig(save_path, dpi=150)
+    plt.savefig(images_dir / save_path, dpi=150)
     plt.close()

@@ -7,6 +7,9 @@ class HyperParam:
     device: torch.device
     use_subset: bool = True
     seed: int = 42
+    train_batch_size: int = 32
+    val_batch_size: int = 32
+    test_batch_size: int = 32
 
     
     def __init__(self):
@@ -16,6 +19,7 @@ class HyperParam:
             self.device = torch.device("cuda")
         else:
             self.device = torch.device("cpu")
+        self.set_seed()    
 
 
     def set_seed(self) -> None:
