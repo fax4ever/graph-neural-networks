@@ -4,13 +4,35 @@ import numpy as np
 
 
 class HyperParam:
-    device: torch.device
-    use_subset: bool = True
+    # General hyperparameters
     seed: int = 42
+
+    # Model hyperparameters
+    device: torch.device
+    residual: bool = True
+    batch_norm: bool = True
+    graph_norm: bool = True
+
+    # Model > GINE hyperparameters
+    n_base_layers: int = 4
+    n_edge_types: int = 7
+    node_emb_dims: int = 128
+    base_hidden_dims: int = 128
+    pe_emb: int = 37 # based on SPE paper by Huang et al. (2023)
+    gine_model_bn: False
+    pooling: str = "add"
+
+    # Model > MLP hyperparameters
+    n_mlp_layers: int = 3
+    mlp_hidden_dims: int = 128
+    mlp_dropout_prob: float = 0.0
+    mlp_norm_type: str = "batch"
+
+    # Dataset hyperparameters
+    use_subset: bool = True
     train_batch_size: int = 32
     val_batch_size: int = 32
     test_batch_size: int = 32
-
     
     def __init__(self):
         if torch.backends.mps.is_available():

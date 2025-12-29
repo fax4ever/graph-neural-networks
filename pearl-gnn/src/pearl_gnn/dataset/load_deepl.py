@@ -4,12 +4,13 @@ import torch
 from torch_geometric.data import Data, Dataset
 from pathlib import Path
 from torch.utils.data import random_split
-from pearl_gnn.hyper_param import HyperParam
+from pearl_gnn.hyper_param import HyperParam 
+from typing import Tuple
 
 
-def load_datasets(hp: HyperParam):
+def load_datasets(hp: HyperParam, letter: str = "A") -> Tuple[Dataset, Dataset, Dataset]:
     # Load train and test datasets
-    data_dir = Path(__file__).parent.parent.parent.parent / "A"
+    data_dir = Path(__file__).parent.parent.parent.parent / letter
     train_path = data_dir / "train.json.gz"
     test_path = data_dir / "test.json.gz"
 
