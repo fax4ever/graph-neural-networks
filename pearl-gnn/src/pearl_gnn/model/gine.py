@@ -26,8 +26,8 @@ class GINELayer(MessagePassing):
 
     def __init__(self, mf: ModelFactory, in_dims: int, out_dims: int):
         super(GINELayer, self).__init__(aggr = "add") # for GIN aggregation function is always add
-        self.edge_features = nn.Embedding(mf.hp.n_edge_types+1, mf.hp.in_dims)
-        self.pe_embedding = mf.create_mlp(mf.hp.pe_emb, in_dims)
+        self.edge_features = nn.Embedding(mf.hp.n_edge_types+1, in_dims)
+        self.pe_embedding = mf.create_mlp(mf.hp.pe_dims, in_dims)
         self.eps = nn.Parameter(data=torch.randn(1))
         self.mlp = mf.create_mlp(in_dims, out_dims)
         

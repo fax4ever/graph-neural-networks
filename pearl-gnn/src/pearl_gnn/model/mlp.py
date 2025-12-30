@@ -29,6 +29,17 @@ class MLP(nn.Module):
         self.linear = nn.Linear(hp.mlp_hidden_dims, out_dims)
         self.dropout = nn.Dropout(p=hp.mlp_dropout_prob)
 
+    def forward(self, X: torch.Tensor) -> torch.Tensor:
+        for layer in self.layers:
+            X = layer(X)
+        X = self.linear(X)
+        X = self.dropout(X)
+        return X
+
+    @property
+    def out_dims(self) -> int:
+        return self.linear.out_features
+
 
 class MLPLayer(nn.Module):
     linear: nn.Linear
