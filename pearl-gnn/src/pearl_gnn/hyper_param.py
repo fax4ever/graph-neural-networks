@@ -27,11 +27,14 @@ class HyperParam:
     n_sample_aggr_layers: int = 8
     sample_aggr_hidden_dims: int = 40
 
-    # Model > PE
+    # Model > Positional Encoding / PEARL
     pe_dims: int = 37 # based on SPE paper by Huang et al. (2023)
-    
-    # Model > PEARL
+    basis: bool = True # True for B-PEARL, False for R-PEARL
     pearl_mlp_out = 37
+    pearl_k: int = 7
+    pearl_mlp_nlayers: int = 1
+    pearl_mlp_hid: int = 37
+    pearl_mlp_out: int = 37
 
     # Dataset hyperparameters
     use_subset: bool = True

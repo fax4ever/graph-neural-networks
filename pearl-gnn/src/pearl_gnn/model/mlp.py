@@ -29,9 +29,9 @@ class MLP(nn.Module):
         self.linear = nn.Linear(hp.mlp_hidden_dims, out_dims)
         self.dropout = nn.Dropout(p=hp.mlp_dropout_prob)
 
-    def forward(self, X: torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, mask=None) -> torch.Tensor:
         for layer in self.layers:
-            X = layer(X)
+            X = layer(X, mask=mask)
         X = self.linear(X)
         X = self.dropout(X)
         return X
@@ -53,22 +53,24 @@ class MLPLayer(nn.Module):
 
         if hp.mlp_norm_type == "batch":
             self.normlaization = nn.BatchNorm1d(out_dims)
-        elif hp.mlp_norm_type == "layer":
-            self.normlaization = nn.LayerNorm(out_dims)
         else:
-            self.normlaization = None
+            self.normlaization = nn.LayerNorm(out_dims)
 
         self.activation = nn.ReLU()
         self.dropout = nn.Dropout(p=hp.mlp_dropout_prob)
 
-    def forward(self, X: torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, mask=None) -> torch.Tensor:
         X = self.linear(X)
+        if mask is not None:
+            X[~mask] = 0
 
-        if self.normlaization is not None:
+        if mask is None:
             shape = X.size()
             X = X.reshape(-1, shape[-1])
             X = self.normlaization(X)
             X = X.reshape(shape)
+        else:
+            X[mask] = self.normlaization(X[mask])    
 
         X = self.activation(X)
         X = self.dropout(X)

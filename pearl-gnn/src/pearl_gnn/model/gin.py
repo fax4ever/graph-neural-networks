@@ -25,11 +25,11 @@ class GINLayer(MessagePassing):
         self.eps = nn.Parameter(data=torch.randn(1))
         self.mlp = mf.create_mlp(in_dims, out_dims)
 
-    def forward(self, X: torch.Tensor, edge_index: torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, edge_index: torch.Tensor, mask=None) -> torch.Tensor:
         S = self.propagate(edge_index, X=X)
         Z = (1 + self.eps) * X
         Z = Z + S
-        return self.mlp(Z)
+        return self.mlp(Z, mask=mask)
     
     def message(self, X_j: torch.Tensor) -> torch.Tensor:
         return F.relu(X_j)
@@ -57,12 +57,21 @@ class GIN(nn.Module):
 
         self.layers.append(GINLayer(mf, mf.hp.sample_aggr_hidden_dims, mf.hp.pe_dims))
 
-    def forward(self, X: torch.Tensor, edge_index: torch.Tensor) -> torch.Tensor:
+    def forward(self, X: torch.Tensor, edge_index: torch.Tensor, mask=None) -> torch.Tensor:
         for i, layer in enumerate(self.layers):
             X0 = X
-            X = layer(X, edge_index)
+            X = layer(X, edge_index, mask=mask)
+
+            if mask is not None:
+                X[~mask] = 0
+
             if self.batch_norms is not None and i < len(self.layers) - 1:
-                X = self.batch_norms[i](X)
+                assert not X.ndim == 3
+                if mask is not None:
+                    X[mask] = self.batch_norms[i](X[mask])
+                else:
+                    X = self.batch_norms[i](X)
+
             X = X + X0
         return X
 
@@ -70,16 +79,3 @@ class GIN(nn.Module):
     def out_dims(self) -> int:
         return self.layers[-1].out_dims
 
-
-class GINSimpleAggregator(nn.Module):
-    gin: GIN
-    mlp: MLP
-
-    def __init__(self, mf: ModelFactory):
-        super(GINSimpleAggregator, self).__init__()
-        self.gin = GIN(mf)
-        self.mlp = mf.create_mlp(mf.hp.base_hidden_dims, mf.hp.out_dims)
-
-    def forward(self, X: torch.Tensor, edge_index: torch.Tensor) -> torch.Tensor:
-        X = self.gin(X, edge_index)
-        return self.mlp(X)
