@@ -87,7 +87,7 @@ class GINEBaseModel(nn.Module):
         self.pooling = global_mean_pool if mf.hp.pooling == 'mean' else global_add_pool
 
     def forward(
-        self, X_n: torch.Tensor, edge_index: torch.Tensor, edge_attr: torch.Tensor, PE: torch.Tensor, snorm: torch.Tensor,
+        self, X_n: torch.Tensor, edge_index: torch.Tensor, edge_attr: torch.Tensor, PE: torch.Tensor,
             batch: torch.Tensor
     ) -> torch.Tensor:
         X_n = self.gine(X_n, edge_index, edge_attr, PE)  

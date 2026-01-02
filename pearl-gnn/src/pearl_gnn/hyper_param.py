@@ -4,6 +4,13 @@ import numpy as np
 
 
 class HyperParam:
+    # Dataset properties
+    # 28 / 3 is for ZINC
+    # those discrete values will be used as input for
+    # embedding layers
+    n_node_types: int = 28
+    n_edge_types: int = 3
+
     # General hyperparameters
     seed: int = 42
     device: torch.device
@@ -16,7 +23,6 @@ class HyperParam:
 
     # Model > GINE hyperparameters
     n_base_layers: int = 4
-    n_edge_types: int = 7
     node_emb_dims: int = 128
     base_hidden_dims: int = 128
     gine_model_bn: bool = False
@@ -30,6 +36,7 @@ class HyperParam:
     # Model > Positional Encoding / PEARL
     pe_dims: int = 37 # based on SPE paper by Huang et al. (2023)
     basis: bool = True # True for B-PEARL, False for R-PEARL
+    num_samples: 120 # num_samples for R-PEARL (used only if basis is false!)
     pearl_mlp_out = 37
     pearl_k: int = 7
     pearl_mlp_nlayers: int = 1
@@ -41,6 +48,7 @@ class HyperParam:
     train_batch_size: int = 32
     val_batch_size: int = 32
     test_batch_size: int = 32
+    
     
     def __init__(self):
         if torch.backends.mps.is_available():

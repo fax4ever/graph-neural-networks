@@ -2,6 +2,7 @@
 from typing import List
 import torch
 import torch.nn as nn
+from torch_geometric.data import Batch
 from pearl_gnn.model.model_factory import ModelFactory
 from pearl_gnn.model.gin import GIN
 from pearl_gnn.model.mlp import MLP
@@ -13,6 +14,17 @@ from pearl_gnn.model.mlp import MLP
 # @fax4ever: 
 # I tried to rewrite the code to be more readable and modular, simplify what is not necessary.
 # In this process I could make some mistakes, so please check the code and report any issues.
+
+
+def initial_pe(batch: Batch, basis: str, num_samples: int):
+    W_list = []
+    for i in range(len(batch.Lap)):
+        if basis:
+            W = torch.eye(batch.Lap[i].shape[0])
+        else:
+            W = torch.randn(batch.Lap[i].shape[0], num_samples) #BxNxM
+        W_list.append(W)
+
 
 
 class RandomSampleAggregator(nn.Module):
@@ -111,9 +123,9 @@ class PEARLPositionalEncoder:
     norms: nn.ModuleList
     activation: nn.ReLU
 
-    def __init__(self, mf: ModelFactory, sample_aggr: nn.Module):
+    def __init__(self, mf: ModelFactory):
         super(PEARLPositionalEncoder, self).__init__()
-        self.sample_aggr = sample_aggr
+        self.sample_aggr = BasisSampleAggregator(mf) if mf.hp.basis else RandomSampleAggregator(mf)
         self.layers = nn.ModuleList([nn.Linear(mf.hp.pearl_k if i==0 else mf.hp.pearl_k, 
             mf.hp.pearl_mlp_hid if i<mf.hp.pearl_mlp_nlayers-1 else mf.hp.pearl_mlp_out) 
             for i in range(mf.hp.pearl_mlp_nlayers)])
@@ -122,17 +134,17 @@ class PEARLPositionalEncoder:
         self.activation = nn.ReLU()
         self.k = mf.hp.pearl_k
         self.basis = mf.hp.basis
+        self.num_samples = mf.hp.num_samples
 
-    def forward(
-        self, Lap, W, edge_index: torch.Tensor, batch: torch.Tensor, final=True
-    ) -> torch.Tensor:
+    def forward(self, batch: Batch) -> torch.Tensor:
         """
-        :param Lap: Laplacian
-        :param W: B*[NxM] or BxNxN
-        :param edge_index: Graph connectivity in COO format. [2, E_sum]
-        :param batch: Batch index vector. [N_sum]
+        :param batch: current batch to process
         :return: Positional encoding matrix. [N_sum, D_pe]
         """
+        Lap = batch.Lap # Laplacian
+        edge_index = batch.edge_index # Graph connectivity in COO format. [2, E_sum]
+        W = initial_pe(batch, self.basis, self.num_samples) #  B*[NxM] or BxNxN
+
         W_list = []
         for lap, w in zip(Lap, W):
             output = filter(lap, w, self.k)   # output [NxMxK]
@@ -144,5 +156,5 @@ class PEARLPositionalEncoder:
                     output = self.activation(output)
                     output = output.transpose(0, 1)
             W_list.append(output)             # [NxMxK]*B
-        return self.sample_aggr(W_list, edge_index, self.basis, final=final)   # [N_sum, D_pe]
+        return self.sample_aggr(W_list, edge_index, self.basis)   # [N_sum, D_pe]
             
