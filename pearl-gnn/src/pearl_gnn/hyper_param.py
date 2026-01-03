@@ -49,6 +49,11 @@ class HyperParam:
     val_batch_size: int = 32
     test_batch_size: int = 32
     
+    # Training hyperparameters
+    learning_rate: float = 1e-3
+    weight_decay: float = 1e-6
+    num_epochs: int = 1400
+    n_warmup_steps: 100
     
     def __init__(self):
         if torch.backends.mps.is_available():

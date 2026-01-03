@@ -1,3 +1,4 @@
+from typing import List, Dict, Any
 import torch
 from torch import nn
 from torch_geometric.data import Batch
@@ -33,3 +34,7 @@ class PEARL_GNN_Model(nn.Module):
         PE = self.positional_encoding(batch)
         X_n = X_n + self.pe_embedding(PE)
         return self.base_model(X_n, batch.edge_index, batch.edge_attr, PE, batch.batch)
+
+
+    def get_param_groups(self) -> List[Dict[str, Any]]:
+        return [{"name": name, "params": [param]} for name, param in self.named_parameters()]    
