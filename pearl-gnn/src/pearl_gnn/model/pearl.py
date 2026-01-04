@@ -29,7 +29,7 @@ class PEARL_GNN_Model(nn.Module):
         self.base_model = GINEBaseModel(mf)
         
 
-    def forward(self, batch: Batch, W) -> torch.Tensor:
+    def forward(self, batch: Batch) -> torch.Tensor:
         X_n = self.node_features(batch.x.squeeze(dim=1))
         PE = self.positional_encoding(batch)
         X_n = X_n + self.pe_embedding(PE)
