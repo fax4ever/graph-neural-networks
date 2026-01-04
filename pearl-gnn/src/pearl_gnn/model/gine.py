@@ -83,7 +83,7 @@ class GINEBaseModel(nn.Module):
     def __init__(self, mf: ModelFactory):
         super(GINEBaseModel, self).__init__()
         self.gine = GINE(mf)
-        self.mlp = mf.create_mlp(mf.hp.base_hidden_dims, mf.hp.out_dims)
+        self.mlp = mf.create_mlp(mf.hp.base_hidden_dims, mf.hp.target_dim)
         self.pooling = global_mean_pool if mf.hp.pooling == 'mean' else global_add_pool
 
     def forward(

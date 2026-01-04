@@ -1,14 +1,14 @@
 import os
-import sys
 from typing import Callable
 from pathlib import Path
 import logging
 import torch
 from torch import nn
 from torch.optim.lr_scheduler import LambdaLR
-from torch_geometric.data import Batch
+from torch_geometric.data import Batch, DataLoader
 import matplotlib.pyplot as plt
 from pearl_gnn.model.model_factory import ModelFactory
+from pearl_gnn.model.pearl import PEARL_GNN_Model
 
 
 # This code is adapted from:
@@ -19,23 +19,30 @@ from pearl_gnn.model.model_factory import ModelFactory
 # In this process I could make some mistakes, so please check the code and report any issues.
 
 
-def plot_training_progress(train_losses, train_accuracies, output_dir, file_name):
+def plot_epochs_progress(train_losses, val_losses, test_losses, output_dir, file_name):
     epochs = range(1, len(train_losses) + 1)
     plt.figure(figsize=(12, 6))
 
-    # Plot loss
-    plt.subplot(1, 2, 1)
-    plt.plot(epochs, train_losses, label="Training Loss", color='blue')
+    # Plot train loss
+    plt.subplot(1, 3, 1)
+    plt.plot(epochs, train_losses, label="Train MAE", color='blue')
     plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    plt.title('Training Loss per Epoch')
+    plt.ylabel('MAE')
+    plt.title('Train MAE per Epoch')
 
-    # Plot accuracy
-    plt.subplot(1, 2, 2)
-    plt.plot(epochs, train_accuracies, label="Training Accuracy", color='green')
+    # Plot validation loss
+    plt.subplot(1, 3, 2)
+    plt.plot(epochs, val_losses, label="Validation MAE", color='green')
     plt.xlabel('Epoch')
-    plt.ylabel('Accuracy')
-    plt.title('Training Accuracy per Epoch')
+    plt.ylabel('MAE')
+    plt.title('Validation MAE per Epoch')
+
+    # Plot test loss
+    plt.subplot(1, 3, 3)
+    plt.plot(epochs, test_losses, label="Test MAE", color='red')
+    plt.xlabel('Epoch')
+    plt.ylabel('MAE')
+    plt.title('Test MAE per Epoch')
 
     # Save plots in the current directory
     plt.tight_layout()
@@ -46,20 +53,18 @@ def plot_training_progress(train_losses, train_accuracies, output_dir, file_name
 class ModelTrainingData:
     def __init__(self):
         self.train_losses = []
-        self.train_accuracies = []
         self.val_losses = []
-        self.val_accuracies = []
+        self.test_losses = []
 
-    def append(self, train_loss, train_acc, val_loss, val_acc):
+
+    def append(self, train_loss, val_loss, test_loss):
         self.train_losses.append(train_loss)
-        self.train_accuracies.append(train_acc)
         self.val_losses.append(val_loss)
-        self.val_accuracies.append(val_acc)
+        self.test_losses.append(test_loss)
 
-    def plot_training(self, model_name, output_dir, validation):
-        plot_training_progress(self.train_losses, self.train_accuracies, output_dir, f"training_{model_name}.png")
-        if validation:
-            plot_training_progress(self.val_losses, self.val_accuracies, output_dir, f"validation_{model_name}.png")
+
+    def plot_training(self, model_name, output_dir):
+        plot_epochs_progress(self.train_losses, self.val_losses, self.test_losses, output_dir, f"epochs_progress_{model_name}.png")
 
 
 class ModelSupport:
@@ -67,11 +72,11 @@ class ModelSupport:
 
         base_dir = Path(__file__).parent.parent.parent.parent
 
-        self.model = mf.create_pearl_model()
+        self.model = PEARL_GNN_Model(mf)
         self.optimizer = torch.optim.Adam(self.model.get_param_groups(), lr=mf.hp.learning_rate, weight_decay=mf.hp.weight_decay)
         self.scheduler = LambdaLR(self.optimizer, lr_lambda)
         # Use mean absolute error (MAE) as in the original paper
-        self.criterion = nn.L1Loss() 
+        self.criterion = nn.L1Loss(reduce="mean") 
         self.metric = nn.L1Loss(reduction="sum")
         self.model_name = model_name
 
@@ -85,14 +90,38 @@ class ModelSupport:
         # We select the model that has the lowest validation loss as in the original paper
         self.best_val_loss = 999.0 # 999.0 is used in the orginal paper
 
+
     def parameters(self):
         return self.model.parameters()
 
-    def train(self):
-        self.model.train()
 
-    def eval(self):
+    def train_epoch(self, train_loader: DataLoader) -> float:
+        self.model.train()
+        total_loss = 0.0
+        total_correct = 0
+
+        for self.curr_batch, batch in enumerate(self.train_loader, 1):
+            batch_loss, batch_prediction = self.train_batch(batch)
+            total_loss += batch_loss
+            total_correct += (batch_prediction ==  batch.y).sum().item()
+
+        size = len(train_loader.dataset)
+        return total_loss / size, total_correct / size
+
+
+    def evaluate_epoch(self, eval_loader: DataLoader) -> float:
         self.model.eval()
+        total_loss = 0.0
+        total_correct = 0
+
+        for self.curr_batch, batch in enumerate(eval_loader, 1):
+            batch_loss, batch_prediction = self.model.evaluate_batch(batch)
+            total_loss += batch_loss
+            total_correct += (batch_prediction ==  batch.y).sum().item()
+
+        size = len(eval_loader.dataset)
+        return total_loss / size, total_correct / size     
+
 
     def train_batch(self, batch: Batch):
         self.optimizer.zero_grad()
@@ -109,44 +138,37 @@ class ModelSupport:
         # consistent with the metric reduction (sum)
         return loss * batch.y.size(0), output.argmax(dim=1)
 
+
     def evaluate_batch(self, batch: Batch) -> float:
         with torch.no_grad():
             output = self.model(batch)
         return self.metric(output, batch.y).item(), output.argmax(dim=1)    
+
 
     def save_checkpoint(self, current_epoch):
         checkpoint_file = f"{self.checkpoint_path}_epoch_{current_epoch + 1}.pth"
         torch.save(self.model.state_dict(), checkpoint_file)
         print(f"Checkpoint saved at {checkpoint_file}")
 
-    def append_epoch_data(self, train_loss, train_acc, val_loss, val_acc, epoch, num_epochs):
-        self.training_data.append(train_loss, train_acc, val_loss, val_acc)
 
-        info = f"Epoch {epoch + 1}/{num_epochs}, Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, " \
-               f"Validation Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}"
+    def append_epoch_data(self, train_loss, val_loss, test_loss, epoch, num_epochs):
+        self.training_data.append(train_loss, val_loss, test_loss)
+
+        info = f"Epoch {epoch + 1}/{num_epochs}, Train Loss: {train_loss:.4f}, " \
+               f"Validation Loss: {val_loss:.4f}, Test Loss: {test_loss:.4f}"
         logging.info(info)
 
-        # Save best model
-        if val_acc > self.best_accuracy:
-            self.best_accuracy = val_acc
+        # Save best model according to the validation set
+        if val_loss > self.best_val_loss:
+            self.best_val_loss = val_loss
             torch.save(self.model.state_dict(), self.best_checkpoint_path)
             print(f"Best model updated and saved at {self.best_checkpoint_path}")
 
-    def append_epoch_data_no_validation(self, train_loss, train_acc, epoch, num_epochs):
-        self.training_data.append(train_loss, train_acc, None, None)
-
-        info = f"Epoch {epoch + 1}/{num_epochs}, Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}, "
-        logging.info(info)
-
-        # Save best model
-        if train_acc > self.best_accuracy:
-            self.best_accuracy = train_acc
-            torch.save(self.model.state_dict(), self.best_checkpoint_path)
-            print(f"Best model updated and saved at {self.best_checkpoint_path}")
 
     def load_best_checkpoint(self):
         self.model.load_state_dict(torch.load(self.best_checkpoint_path))
 
-    def plot_training(self, validation=True):
+
+    def plot_training(self):
         # Plot training progress in current directory
-        self.training_data.plot_training(self.model_name, self.logs_path, validation)    
+        self.training_data.plot_training(self.model_name, self.logs_path)    

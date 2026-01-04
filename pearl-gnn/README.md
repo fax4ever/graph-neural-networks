@@ -1,4 +1,18 @@
-## Main dataset: ZINC dataset from torch_geometric
+# Main project
+
+```bash
+uv sync
+```
+
+```bash
+uv run script/main_train.py
+```
+
+# Visualize datasets
+
+Not part of the reproducer.
+
+## Visualize dataset: ZINC dataset from torch_geometric
 
 ```bash
 uv sync
@@ -12,7 +26,7 @@ uv run script/main_zinc.py
 uv run pytest
 ```
 
-## Alternative: Deep Learning Sapienza Hackaton dataset
+## *Alternative* Visualize dataset: Deep Learning Sapienza Hackaton dataset
 
 Download the dataset and copy the folders (A/B/C/D) at the root of this subproject (graph-neural-networks/pearl-gnn):
 

@@ -27,6 +27,7 @@ class HyperParam:
     base_hidden_dims: int = 128
     gine_model_bn: bool = False
     pooling: str = "add"
+    target_dim: int = 1
 
     # Model > GIN / SampleAggregator hyperparameters
     gin_sample_aggregator_bn: bool = True
@@ -36,7 +37,7 @@ class HyperParam:
     # Model > Positional Encoding / PEARL
     pe_dims: int = 37 # based on SPE paper by Huang et al. (2023)
     basis: bool = True # True for B-PEARL, False for R-PEARL
-    num_samples: 120 # num_samples for R-PEARL (used only if basis is false!)
+    num_samples = 120 # num_samples for R-PEARL (used only if basis is false!)
     pearl_mlp_out = 37
     pearl_k: int = 7
     pearl_mlp_nlayers: int = 1
@@ -53,7 +54,7 @@ class HyperParam:
     learning_rate: float = 1e-3
     weight_decay: float = 1e-6
     num_epochs: int = 1400
-    n_warmup_steps: 100
+    n_warmup_steps: int = 100
     
     def __init__(self):
         if torch.backends.mps.is_available():

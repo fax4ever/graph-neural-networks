@@ -157,4 +157,8 @@ class PEARLPositionalEncoder:
                     output = output.transpose(0, 1)
             W_list.append(output)             # [NxMxK]*B
         return self.sample_aggr(W_list, edge_index, self.basis)   # [N_sum, D_pe]
+
+    @property
+    def out_dims(self) -> int:
+        return self.sample_aggr.out_dims
             
