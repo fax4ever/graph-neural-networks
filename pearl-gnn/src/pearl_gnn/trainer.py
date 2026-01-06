@@ -4,7 +4,6 @@ from torch_geometric.loader import DataLoader
 from torch_geometric.data import Dataset, Data
 from torch_geometric.datasets import ZINC
 from torch_geometric.utils import get_laplacian, to_dense_adj
-from omegaconf import OmegaConf
 
 from pearl_gnn.hyper_param import HyperParam
 from pearl_gnn.model.model_factory import ModelFactory
@@ -42,7 +41,6 @@ class Trainer:
 
 
     def train_all_epochs(self):
-        logging.info("Configuration:\n" + OmegaConf.to_yaml(self.hp))
         logging.info(f"Total parameters: {sum(param.numel() for param in self.model.parameters())}")
         logging.info(f"Total training steps: {self.n_total_steps}")
         logging.info("Optimizer groups:\n" + "\n".join(group["name"] for group in self.model.optimizer.param_groups) + "\n")
