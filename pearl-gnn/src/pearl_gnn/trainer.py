@@ -63,9 +63,6 @@ class Trainer:
             return max(0.0, (self.n_total_steps - curr_step) / max(1, self.n_total_steps - self.hp.n_warmup_steps))
 
 
-    
-
-
     @property
     def n_total_steps(self) -> int:
         return len(self.train_loader) * self.hp.num_epochs
