@@ -2,7 +2,8 @@
 from typing import List
 import torch
 import torch.nn as nn
-from torch_geometric.data import Batch
+from torch_geometric.data import Batch, Data
+from torch_geometric.utils import get_laplacian, to_dense_adj
 from pearl_gnn.model.model_factory import ModelFactory
 from pearl_gnn.model.gin import GIN
 from pearl_gnn.model.mlp import MLP
@@ -16,15 +17,24 @@ from pearl_gnn.model.mlp import MLP
 # In this process I could make some mistakes, so please check the code and report any issues.
 
 
+def get_lap(instance: Data) -> Data:
+    L_edge_index, L_values = get_laplacian(instance.edge_index, normalization="sym", num_nodes=instance.num_nodes)    
+    return to_dense_adj(L_edge_index, edge_attr=L_values, max_num_nodes=instance.num_nodes).squeeze(dim=0)
+
+
+def get_batch_lap(instance: Batch) -> Batch:
+    L_edge_index, L_values = get_laplacian(instance.edge_index, normalization="sym", num_nodes=instance.num_nodes)    
+    return to_dense_adj(L_edge_index, edge_attr=L_values, max_num_nodes=instance.num_nodes).squeeze(dim=0)
+
+
 def initial_pe(batch: Batch, basis: str, num_samples: int):
     W_list = []
-    for i in range(len(batch.Lap)):
+    for i in range(len(batch.x)):
         if basis:
-            W = torch.eye(batch.Lap[i].shape[0])
+            W = torch.eye(batch.x.shape[0])
         else:
-            W = torch.randn(batch.Lap[i].shape[0], num_samples) #BxNxM
+            W = torch.randn(batch.x.shape[0], num_samples) #BxNxM
         W_list.append(W)
-
 
 
 class RandomSampleAggregator(nn.Module):
@@ -117,7 +127,7 @@ def filter(S, W, k):
     return torch.cat(w_list, dim=-1) #NxMxK
 
 
-class PEARLPositionalEncoder:
+class PEARLPositionalEncoder(nn.Module):
     sample_aggr: nn.Module
     layers: nn.ModuleList
     norms: nn.ModuleList
@@ -141,7 +151,7 @@ class PEARLPositionalEncoder:
         :param batch: current batch to process
         :return: Positional encoding matrix. [N_sum, D_pe]
         """
-        Lap = batch.Lap # Laplacian
+        Lap = get_batch_lap(batch) # Laplacian
         edge_index = batch.edge_index # Graph connectivity in COO format. [2, E_sum]
         W = initial_pe(batch, self.basis, self.num_samples) #  B*[NxM] or BxNxN
 

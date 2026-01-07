@@ -100,7 +100,7 @@ class ModelSupport:
         total_loss = 0.0
         total_correct = 0
 
-        for self.curr_batch, batch in enumerate(self.train_loader, 1):
+        for self.curr_batch, batch in enumerate(train_loader, 1):
             batch_loss, batch_prediction = self.train_batch(batch)
             total_loss += batch_loss
             total_correct += (batch_prediction ==  batch.y).sum().item()

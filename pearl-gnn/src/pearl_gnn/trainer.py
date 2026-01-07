@@ -1,9 +1,8 @@
 import logging
 from pathlib import Path
 from torch_geometric.loader import DataLoader
-from torch_geometric.data import Dataset, Data
+from torch_geometric.data import Dataset
 from torch_geometric.datasets import ZINC
-from torch_geometric.utils import get_laplacian, to_dense_adj
 
 from pearl_gnn.hyper_param import HyperParam
 from pearl_gnn.model.model_factory import ModelFactory
@@ -29,9 +28,9 @@ class Trainer:
     def __init__(self, mf: ModelFactory):
         root = str(Path(__file__).parent.parent.parent / "data" / "ZINC")
 
-        train_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="train", transform=self.get_lap)
-        val_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="val", transform=self.get_lap)
-        test_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="test", transform=self.get_lap)
+        train_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="train")
+        val_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="val")
+        test_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="test")
 
         self.train_loader = DataLoader(train_dataset, batch_size=mf.hp.train_batch_size, shuffle=True, num_workers=3)
         self.val_loader = DataLoader(val_dataset, batch_size=mf.hp.val_batch_size, shuffle=False, num_workers=0)
@@ -64,12 +63,7 @@ class Trainer:
             return max(0.0, (self.n_total_steps - curr_step) / max(1, self.n_total_steps - self.hp.n_warmup_steps))
 
 
-    def get_lap(self, instance: Data) -> Data:
-        n = instance.num_nodes
-        L_edge_index, L_values = get_laplacian(instance.edge_index, normalization="sym", num_nodes=n)   # [2, X], [X]
-        L = to_dense_adj(L_edge_index, edge_attr=L_values, max_num_nodes=n).squeeze(dim=0)
-        instance.Lap = L
-        return instance
+    
 
 
     @property
