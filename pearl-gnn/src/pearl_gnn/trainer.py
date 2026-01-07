@@ -7,6 +7,7 @@ from torch_geometric.datasets import ZINC
 from pearl_gnn.hyper_param import HyperParam
 from pearl_gnn.model.model_factory import ModelFactory
 from pearl_gnn.model.model_support import ModelSupport
+from pearl_gnn.model.pe import add_laplacian_transform
 
 
 # This code is adapted from:
@@ -28,9 +29,11 @@ class Trainer:
     def __init__(self, mf: ModelFactory):
         root = str(Path(__file__).parent.parent.parent / "data" / "ZINC")
 
-        train_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="train")
-        val_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="val")
-        test_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="test")
+        # Apply the laplacian transform to pre-compute sparse Laplacian components
+        # that can be properly batched by PyG
+        train_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="train", transform=add_laplacian_transform)
+        val_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="val", transform=add_laplacian_transform)
+        test_dataset: Dataset = ZINC(root=root, subset=mf.hp.use_subset, split="test", transform=add_laplacian_transform)
 
         self.train_loader = DataLoader(train_dataset, batch_size=mf.hp.train_batch_size, shuffle=True, num_workers=3)
         self.val_loader = DataLoader(val_dataset, batch_size=mf.hp.val_batch_size, shuffle=False, num_workers=0)

@@ -1,4 +1,3 @@
-from math import sin
 from torch_geometric.loader import DataLoader
 from torch_geometric.data import Dataset, Data, Batch
 from torch_geometric.datasets import ZINC
@@ -8,33 +7,13 @@ from pearl_gnn.model.pearl import PEARL_GNN_Model
 from pearl_gnn.model.model_factory import ModelFactory
 from pearl_gnn.hyper_param import HyperParam
 from pearl_gnn.model.model_support import ModelSupport
+from pearl_gnn.model.pe import add_laplacian_transform, get_per_graph_dense_laplacians
 
 
 ROOT = str(Path(__file__).parent.parent / "data" / "ZINC")
 SUB_DATASET_SIZE = 10
 hyper_param = HyperParam()
 N_TOTAL_STEPS = SUB_DATASET_SIZE * hyper_param.num_epochs
-
-
-def get_lap(instance: Data) -> Data:
-    n = instance.num_nodes
-    L_edge_index, L_values = get_laplacian(instance.edge_index, normalization="sym", num_nodes=n)   # [2, X], [X]
-    L = to_dense_adj(L_edge_index, edge_attr=L_values, max_num_nodes=n).squeeze(dim=0)
-    instance.Lap = L
-    return instance
-
-
-def sparse_lap(instance: Data) -> Data:
-    n = instance.num_nodes
-    L_edge_index, L_values = get_laplacian(instance.edge_index, normalization="sym", num_nodes=n)
-    instance.L_edge_index = L_edge_index
-    instance.L_values = L_values
-    instance.max_num_nodes = n
-    return instance
-
-
-def dense_lap(L_edge_index, L_values, max_num_nodes):
-    return to_dense_adj(L_edge_index, edge_attr=L_values, max_num_nodes=max_num_nodes).squeeze(dim=0)
 
 
 def lr_lambda(curr_step: int) -> float:
@@ -53,36 +32,76 @@ class TestModel:
         assert model is not None
 
 
-    def test_dataset_enumeration(self):
+    def test_laplacian_transform_single_graph(self):
+        """Test that the transform correctly adds sparse Laplacian components."""
         train_dataset: Dataset = ZINC(root=ROOT, subset=True, split="train")
-        size = len(train_dataset)
-        for i in range(size):
-            item = train_dataset[i]
-            get_lap(item)
-            assert item.Lap is not None
+        data = train_dataset[0]
+        
+        # Apply the transform
+        data = add_laplacian_transform(data)
+        
+        assert hasattr(data, 'lap_edge_index'), "Transform should add lap_edge_index"
+        assert hasattr(data, 'lap_edge_attr'), "Transform should add lap_edge_attr"
+        assert data.lap_edge_index.shape[0] == 2, "lap_edge_index should have 2 rows"
 
 
-    def test_dataset_transformation(self):
-        train_dataset: Dataset = ZINC(root=ROOT, subset=True, split="train", transform=get_lap)
-        size = len(train_dataset)
-        for i in range(size):
-            item = train_dataset[i]
-            assert item.Lap is not None
-
-
-    def test_dataloader_transformation(self):
-        train_dataset: Dataset = ZINC(root=ROOT, subset=True, split="train", transform=sparse_lap)
+    def test_laplacian_transform_with_dataloader(self):
+        """Test that transformed data can be properly batched by PyG."""
+        train_dataset: Dataset = ZINC(root=ROOT, subset=True, split="train", transform=add_laplacian_transform)
         train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+        
         for batch in train_loader:
-            assert batch.L_edge_index is not None
-            assert batch.L_values is not None
-            assert batch.max_num_nodes is not None
-            # L = dense_lap(batch.L_edge_index, batch.L_values, batch.max_num_nodes)
-            # assert L is not None
+            assert hasattr(batch, 'lap_edge_index'), "Batch should have lap_edge_index"
+            assert hasattr(batch, 'lap_edge_attr'), "Batch should have lap_edge_attr"
+            assert hasattr(batch, '_slice_dict'), "Batch should have slice info"
+            assert 'lap_edge_index' in batch._slice_dict, "Slice dict should contain lap_edge_index"
+            break  # Just test first batch
+
+
+    def test_per_graph_laplacian_reconstruction(self):
+        """Test that we can reconstruct per-graph dense Laplacians from a batch."""
+        train_dataset: Dataset = ZINC(root=ROOT, subset=True, split="train", transform=add_laplacian_transform)
+        train_loader = DataLoader(train_dataset, batch_size=8, shuffle=False)
+        
+        for batch in train_loader:
+            # Reconstruct per-graph Laplacians
+            laplacians = get_per_graph_dense_laplacians(batch)
+            
+            # Verify we get one Laplacian per graph
+            assert len(laplacians) == batch.num_graphs, f"Expected {batch.num_graphs} Laplacians"
+            
+            # Verify each Laplacian has correct shape
+            ptr = batch.ptr
+            for i, lap in enumerate(laplacians):
+                n_nodes = (ptr[i + 1] - ptr[i]).item()
+                assert lap.shape == (n_nodes, n_nodes), f"Laplacian {i} has wrong shape"
+            break  # Just test first batch
+
+
+    def test_laplacian_values_correctness(self):
+        """Verify reconstructed Laplacians match directly computed ones."""
+        train_dataset: Dataset = ZINC(root=ROOT, subset=True, split="train", transform=add_laplacian_transform)
+        
+        # Get a single graph
+        data = train_dataset[0]
+        
+        # Compute Laplacian directly
+        n = data.num_nodes
+        L_edge_index, L_values = get_laplacian(data.edge_index, normalization="sym", num_nodes=n)
+        direct_lap = to_dense_adj(L_edge_index, edge_attr=L_values, max_num_nodes=n).squeeze(0)
+        
+        # Create a "batch" of one graph and reconstruct
+        batch = Batch.from_data_list([data])
+        reconstructed_laps = get_per_graph_dense_laplacians(batch)
+        
+        import torch
+        assert torch.allclose(direct_lap, reconstructed_laps[0], atol=1e-6), \
+            "Reconstructed Laplacian should match directly computed one"
 
 
     def test_subdataset_training(self):
-        dataset: Dataset = ZINC(root=ROOT, subset=True, split="train", transform=sparse_lap)
+        """Test that training works with the new Laplacian handling."""
+        dataset: Dataset = ZINC(root=ROOT, subset=True, split="train", transform=add_laplacian_transform)
         dataset = dataset[:SUB_DATASET_SIZE]
         loader = DataLoader(dataset, batch_size=32, shuffle=True)
         

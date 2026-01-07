@@ -17,24 +17,105 @@ from pearl_gnn.model.mlp import MLP
 # In this process I could make some mistakes, so please check the code and report any issues.
 
 
-def get_lap(instance: Data) -> Data:
-    L_edge_index, L_values = get_laplacian(instance.edge_index, normalization="sym", num_nodes=instance.num_nodes)    
-    return to_dense_adj(L_edge_index, edge_attr=L_values, max_num_nodes=instance.num_nodes).squeeze(dim=0)
+def add_laplacian_transform(data: Data) -> Data:
+    """
+    Transform to pre-compute sparse Laplacian components for each graph.
+    Use this as a transform when loading the dataset:
+        dataset = ZINC(root=root, transform=add_laplacian_transform)
+    
+    The sparse representation can be properly collated by PyG's Batch.
+    """
+    n = data.num_nodes
+    L_edge_index, L_values = get_laplacian(data.edge_index, normalization="sym", num_nodes=n)
+    data.lap_edge_index = L_edge_index
+    data.lap_edge_attr = L_values
+    return data
 
 
-def get_batch_lap(instance: Batch) -> Batch:
-    L_edge_index, L_values = get_laplacian(instance.edge_index, normalization="sym", num_nodes=instance.num_nodes)    
-    return to_dense_adj(L_edge_index, edge_attr=L_values, max_num_nodes=instance.num_nodes).squeeze(dim=0)
+def get_per_graph_dense_laplacians(batch: Batch) -> List[torch.Tensor]:
+    """
+    Reconstruct per-graph dense Laplacians from a batched graph.
+    
+    After batching, PyG merges graphs into one large graph. This function
+    uses the batch's slicing information to extract each graph's Laplacian
+    and convert it to a dense matrix.
+    
+    Args:
+        batch: A PyG Batch object with lap_edge_index and lap_edge_attr 
+               (added via add_laplacian_transform)
+    
+    Returns:
+        List of dense Laplacian matrices, one per graph in the batch.
+    """
+    # Get the number of graphs in the batch
+    num_graphs = batch.num_graphs
+    
+    # batch.ptr gives us cumulative node counts: [0, n1, n1+n2, ...]
+    # This tells us where each graph's nodes start/end
+    ptr = batch.ptr
+    
+    # Get slicing info for lap_edge_index (edge offsets and increments)
+    # PyG stores this automatically when batching
+    lap_edge_slices = batch._slice_dict['lap_edge_index']  # edge index boundaries
+    lap_attr_slices = batch._slice_dict['lap_edge_attr']   # edge attr boundaries
+    
+    laplacians = []
+    for i in range(num_graphs):
+        # Number of nodes in this graph
+        n_nodes = ptr[i + 1] - ptr[i]
+        node_offset = ptr[i].item()
+        
+        # Extract this graph's Laplacian edges
+        edge_start = lap_edge_slices[i].item()
+        edge_end = lap_edge_slices[i + 1].item()
+        
+        # Get the edge indices for this graph and remove the node offset
+        graph_lap_edge_index = batch.lap_edge_index[:, edge_start:edge_end] - node_offset
+        
+        # Get the edge values for this graph
+        attr_start = lap_attr_slices[i].item()
+        attr_end = lap_attr_slices[i + 1].item()
+        graph_lap_edge_attr = batch.lap_edge_attr[attr_start:attr_end]
+        
+        # Convert to dense
+        dense_lap = to_dense_adj(
+            graph_lap_edge_index, 
+            edge_attr=graph_lap_edge_attr, 
+            max_num_nodes=n_nodes
+        ).squeeze(0)
+        
+        laplacians.append(dense_lap)
+    
+    return laplacians
 
 
-def initial_pe(batch: Batch, basis: str, num_samples: int):
+def initial_pe(batch: Batch, basis: bool, num_samples: int) -> List[torch.Tensor]:
+    """
+    Initialize positional encoding basis for each graph in the batch.
+    
+    Args:
+        batch: PyG Batch object
+        basis: If True, use identity matrix (deterministic). 
+               If False, use random samples (stochastic).
+        num_samples: Number of random samples (only used if basis=False)
+    
+    Returns:
+        List of initial PE matrices, one per graph [N_i x N_i] or [N_i x M]
+    """
+    ptr = batch.ptr
+    num_graphs = batch.num_graphs
+    device = batch.x.device
+    
     W_list = []
-    for i in range(len(batch.x)):
+    for i in range(num_graphs):
+        n_nodes = (ptr[i + 1] - ptr[i]).item()
         if basis:
-            W = torch.eye(batch.x.shape[0])
+            W = torch.eye(n_nodes, device=device)  # [N_i x N_i]
         else:
-            W = torch.randn(batch.x.shape[0], num_samples) #BxNxM
+            W = torch.randn(n_nodes, num_samples, device=device)  # [N_i x M]
         W_list.append(W)
+    
+    return W_list
 
 
 class RandomSampleAggregator(nn.Module):
@@ -148,25 +229,27 @@ class PEARLPositionalEncoder(nn.Module):
 
     def forward(self, batch: Batch) -> torch.Tensor:
         """
-        :param batch: current batch to process
+        :param batch: current batch to process (must have lap_edge_index and lap_edge_attr
+                      from add_laplacian_transform)
         :return: Positional encoding matrix. [N_sum, D_pe]
         """
-        Lap = get_batch_lap(batch) # Laplacian
-        edge_index = batch.edge_index # Graph connectivity in COO format. [2, E_sum]
-        W = initial_pe(batch, self.basis, self.num_samples) #  B*[NxM] or BxNxN
+        # Get per-graph dense Laplacians from the batched sparse representation
+        Lap_list = get_per_graph_dense_laplacians(batch)
+        edge_index = batch.edge_index  # Graph connectivity in COO format. [2, E_sum]
+        W_init = initial_pe(batch, self.basis, self.num_samples)  # B*[NxM] or B*[NxN]
 
         W_list = []
-        for lap, w in zip(Lap, W):
+        for lap, w in zip(Lap_list, W_init):
             output = filter(lap, w, self.k)   # output [NxMxK]
-            if self.mlp_nlayers > 0:
+            if len(self.layers) > 0:
                 for layer, bn in zip(self.layers, self.norms):
                     output = output.transpose(0, 1)
                     output = layer(output)
-                    output = bn(output.transpose(1,2)).transpose(1,2)
+                    output = bn(output.transpose(1, 2)).transpose(1, 2)
                     output = self.activation(output)
                     output = output.transpose(0, 1)
             W_list.append(output)             # [NxMxK]*B
-        return self.sample_aggr(W_list, edge_index, self.basis)   # [N_sum, D_pe]
+        return self.sample_aggr(W_list, edge_index)   # [N_sum, D_pe]
 
     @property
     def out_dims(self) -> int:
