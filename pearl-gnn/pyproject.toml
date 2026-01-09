@@ -13,6 +13,7 @@ dependencies = [
     "numpy>=2.4.0",
     "torch>=2.9.1",
     "torch-geometric>=2.7.0",
+    "pytorch-triton-rocm; sys_platform == 'linux'",
 ]
 
 [project.scripts]
@@ -22,6 +23,20 @@ pearl-gnn = "pearl_gnn:main"
 dev = [
     "pytest>=8.0.0",
 ]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-rocm", marker = "sys_platform == 'linux'" },
+]
+# ROCm6 support relies on `pytorch-triton-rocm`, which should also be installed from the PyTorch index
+pytorch-triton-rocm = [
+    { index = "pytorch-rocm", marker = "sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-rocm"
+url = "https://download.pytorch.org/whl/rocm6.3"
+explicit = true
 
 [tool.pytest.ini_options]
 filterwarnings = [
