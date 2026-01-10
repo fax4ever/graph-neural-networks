@@ -4,6 +4,9 @@ from pearl_gnn.helper.visualize import plot
 
 if __name__ == "__main__":
     hyper_param = HyperParam()
+
+    print(f"Device: {hyper_param.device}")
+    print(f"Device name: {hyper_param.device_name}")
     
     train_dataset, val_dataset, test_dataset = load_datasets(hyper_param, letter="A")
     for i in range(3):

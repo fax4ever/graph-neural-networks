@@ -14,6 +14,7 @@ class HyperParam:
     # General hyperparameters
     seed: int = 42
     device: torch.device
+    device_name: str
 
     # Model > MLP hyperparameters
     n_mlp_layers: int = 3
@@ -59,10 +60,13 @@ class HyperParam:
     def __init__(self):
         if torch.backends.mps.is_available():
             self.device = torch.device("mps")
+            self.device_name = "MPS"
         elif torch.cuda.is_available():
             self.device = torch.device("cuda")
+            self.device_name = torch.cuda.get_device_name(0)
         else:
             self.device = torch.device("cpu")
+            self.device_name = "CPU"
         self.set_seed()    
 
 

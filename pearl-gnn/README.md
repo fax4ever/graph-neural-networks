@@ -8,6 +8,27 @@ uv sync
 uv run script/main_train.py
 ```
 
+# Alternative installation: ROCm + conda
+
+conda create -n pearl-pe python=3.13
+conda activate pearl-pe
+pip install torch pytorch-triton-rocm --index-url https://download.pytorch.org/whl/rocm6.2.4
+pip install numpy matplotlib networkx torch-geometric
+conda install conda-forge::pytest
+pip install -e . --no-deps  # Install only the package code in editable mode (no dependencies)
+pytest
+python script/main_zinc.py
+
+## Verify ROCm
+
+```python
+import sys, torch
+
+> sys.version # '3.13.11 | packaged by conda-forge | (main, Dec  6 2025, 11:24:03) [GCC 14.3.0]'
+> torch.cuda.is_available() # True
+> torch.cuda.get_device_name(0) # 'AMD Radeon RX 7800 XT'
+```
+
 # Visualize datasets
 
 Not part of the reproducer.

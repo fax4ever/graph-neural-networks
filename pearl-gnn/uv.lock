@@ -706,8 +706,8 @@ dependencies = [
     { name = "networkx" },
     { name = "numpy" },
     { name = "pytorch-triton-rocm", marker = "sys_platform == 'linux'" },
+    { name = "torch", version = "2.7.1+rocm6.2.4", source = { registry = "https://download.pytorch.org/whl/rocm6.2.4" }, marker = "sys_platform == 'linux'" },
     { name = "torch", version = "2.9.1", source = { registry = "https://pypi.org/simple" }, marker = "sys_platform != 'linux'" },
-    { name = "torch", version = "2.9.1+rocm6.3", source = { registry = "https://download.pytorch.org/whl/rocm6.3" }, marker = "sys_platform == 'linux'" },
     { name = "torch-geometric" },
 ]
 
@@ -721,9 +721,9 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.8" },
     { name = "networkx", specifier = ">=3.6.1" },
     { name = "numpy", specifier = ">=2.4.0" },
-    { name = "pytorch-triton-rocm", marker = "sys_platform == 'linux'", index = "https://download.pytorch.org/whl/rocm6.3" },
-    { name = "torch", marker = "sys_platform != 'linux'", specifier = ">=2.9.1" },
-    { name = "torch", marker = "sys_platform == 'linux'", specifier = ">=2.9.1", index = "https://download.pytorch.org/whl/rocm6.3" },
+    { name = "pytorch-triton-rocm", marker = "sys_platform == 'linux'", index = "https://download.pytorch.org/whl/rocm6.2.4" },
+    { name = "torch", marker = "sys_platform != 'linux'", specifier = ">=2.7.1" },
+    { name = "torch", marker = "sys_platform == 'linux'", specifier = ">=2.7.1", index = "https://download.pytorch.org/whl/rocm6.2.4" },
     { name = "torch-geometric", specifier = ">=2.7.0" },
 ]
 
@@ -942,13 +942,14 @@ wheels = [
 
 [[package]]
 name = "pytorch-triton-rocm"
-version = "3.5.1"
-source = { registry = "https://download.pytorch.org/whl/rocm6.3" }
+version = "3.3.1"
+source = { registry = "https://download.pytorch.org/whl/rocm6.2.4" }
+dependencies = [
+    { name = "setuptools", marker = "sys_platform == 'linux'" },
+]
 wheels = [
-    { url = "https://download.pytorch.org/whl/pytorch_triton_rocm-3.5.1-cp313-cp313-linux_x86_64.whl" },
-    { url = "https://download.pytorch.org/whl/pytorch_triton_rocm-3.5.1-cp313-cp313t-linux_x86_64.whl" },
-    { url = "https://download.pytorch.org/whl/pytorch_triton_rocm-3.5.1-cp314-cp314-linux_x86_64.whl" },
-    { url = "https://download.pytorch.org/whl/pytorch_triton_rocm-3.5.1-cp314-cp314t-linux_x86_64.whl" },
+    { url = "https://download.pytorch.org/whl/pytorch_triton_rocm-3.3.1-cp313-cp313-linux_x86_64.whl", hash = "sha256:104d1087692ea24dbfdb178b7a245c59b04d2121540587e392e30a668cf98edd" },
+    { url = "https://download.pytorch.org/whl/pytorch_triton_rocm-3.3.1-cp313-cp313t-linux_x86_64.whl", hash = "sha256:dd521c3f3679a79081ebaa9a416d2090b0d3970a157e0bbe1e163dc75e8da4bf" },
 ]
 
 [[package]]
@@ -998,6 +999,28 @@ wheels = [
 
 [[package]]
 name = "torch"
+version = "2.7.1+rocm6.2.4"
+source = { registry = "https://download.pytorch.org/whl/rocm6.2.4" }
+resolution-markers = [
+    "sys_platform == 'linux'",
+]
+dependencies = [
+    { name = "filelock", marker = "sys_platform == 'linux'" },
+    { name = "fsspec", marker = "sys_platform == 'linux'" },
+    { name = "jinja2", marker = "sys_platform == 'linux'" },
+    { name = "networkx", marker = "sys_platform == 'linux'" },
+    { name = "pytorch-triton-rocm", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "setuptools", marker = "sys_platform == 'linux'" },
+    { name = "sympy", marker = "sys_platform == 'linux'" },
+    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+]
+wheels = [
+    { url = "https://download.pytorch.org/whl/rocm6.2.4/torch-2.7.1%2Brocm6.2.4-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:e290f4382dbf0e1dcf2afc6ca0c9d713040068544aca3837896dcc604b936049" },
+    { url = "https://download.pytorch.org/whl/rocm6.2.4/torch-2.7.1%2Brocm6.2.4-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:173ef12611407340330b5d550094ff01068962121156963d6a8d69d005101fdc" },
+]
+
+[[package]]
+name = "torch"
 version = "2.9.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
@@ -1021,30 +1044,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/63/5d/e8d4e009e52b6b2cf1684bde2a6be157b96fb873732542fb2a9a99e85a83/torch-2.9.1-cp314-cp314-win_amd64.whl", hash = "sha256:d187566a2cdc726fc80138c3cdb260970fab1c27e99f85452721f7759bbd554d", size = 110934845, upload-time = "2025-11-12T15:22:48.367Z" },
     { url = "https://files.pythonhosted.org/packages/bd/b2/2d15a52516b2ea3f414643b8de68fa4cb220d3877ac8b1028c83dc8ca1c4/torch-2.9.1-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:cb10896a1f7fedaddbccc2017ce6ca9ecaaf990f0973bdfcf405439750118d2c", size = 74823558, upload-time = "2025-11-12T15:22:43.392Z" },
     { url = "https://files.pythonhosted.org/packages/db/2b/f7818f6ec88758dfd21da46b6cd46af9d1b3433e53ddbb19ad1e0da17f9b/torch-2.9.1-cp314-cp314t-win_amd64.whl", hash = "sha256:c88d3299ddeb2b35dcc31753305612db485ab6f1823e37fb29451c8b2732b87e", size = 111163659, upload-time = "2025-11-12T15:23:20.009Z" },
-]
-
-[[package]]
-name = "torch"
-version = "2.9.1+rocm6.3"
-source = { registry = "https://download.pytorch.org/whl/rocm6.3" }
-resolution-markers = [
-    "sys_platform == 'linux'",
-]
-dependencies = [
-    { name = "filelock", marker = "sys_platform == 'linux'" },
-    { name = "fsspec", marker = "sys_platform == 'linux'" },
-    { name = "jinja2", marker = "sys_platform == 'linux'" },
-    { name = "networkx", marker = "sys_platform == 'linux'" },
-    { name = "pytorch-triton-rocm", marker = "sys_platform == 'linux'" },
-    { name = "setuptools", marker = "sys_platform == 'linux'" },
-    { name = "sympy", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
-]
-wheels = [
-    { url = "https://download.pytorch.org/whl/rocm6.3/torch-2.9.1%2Brocm6.3-cp313-cp313-manylinux_2_28_x86_64.whl" },
-    { url = "https://download.pytorch.org/whl/rocm6.3/torch-2.9.1%2Brocm6.3-cp313-cp313t-manylinux_2_28_x86_64.whl" },
-    { url = "https://download.pytorch.org/whl/rocm6.3/torch-2.9.1%2Brocm6.3-cp314-cp314-manylinux_2_28_x86_64.whl" },
-    { url = "https://download.pytorch.org/whl/rocm6.3/torch-2.9.1%2Brocm6.3-cp314-cp314t-manylinux_2_28_x86_64.whl" },
 ]
 
 [[package]]
