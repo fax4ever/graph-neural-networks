@@ -1,4 +1,5 @@
 import torch
+import pytest
 from pearl_gnn.model.gin import GIN, GINLayer
 from pearl_gnn.model.model_factory import ModelFactory
 from pearl_gnn.hyper_param import HyperParam
@@ -25,6 +26,18 @@ class TestGIN:
         
         out = layer(X, edge_index)
         assert out.shape == (4, 40)
+
+    def test_gin_layer_forward_3d_fails(self):
+        """Test GINLayer fails with 3D input tensor."""
+        mf = ModelFactory(make_hp())
+        layer = GINLayer(mf, in_dims=40, out_dims=40)
+        
+        # 3D tensor: (batch, nodes, features) instead of (nodes, features)
+        X = torch.randn(4, 10, 40)
+        edge_index = torch.tensor([[0, 1, 2, 5], [1, 2, 3, 0]])
+        
+        out = layer(X, edge_index)
+        assert out.shape == (4, 10, 40)
 
     def test_gin_forward(self):
         """Test full GIN model with a tiny graph."""
