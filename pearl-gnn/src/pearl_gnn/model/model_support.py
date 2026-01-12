@@ -73,6 +73,8 @@ class ModelSupport:
         base_dir = Path(__file__).parent.parent.parent.parent
 
         self.model = PEARL_GNN_Model(mf)
+        self.device = mf.hp.device
+        self.model.to(self.device)
         self.optimizer = torch.optim.Adam(self.model.get_param_groups(), lr=mf.hp.learning_rate, weight_decay=mf.hp.weight_decay)
         self.scheduler = LambdaLR(self.optimizer, lr_lambda)
         # Use mean absolute error (MAE) as in the original paper
@@ -124,6 +126,7 @@ class ModelSupport:
 
 
     def train_batch(self, batch: Batch):
+        batch.to(self.device)
         self.optimizer.zero_grad()
         output = self.model(batch)
         loss = self.criterion(output, batch.y)
@@ -140,6 +143,7 @@ class ModelSupport:
 
 
     def evaluate_batch(self, batch: Batch) -> float:
+        batch.to(self.device)
         with torch.no_grad():
             output = self.model(batch)
         return self.metric(output, batch.y).item(), output 
