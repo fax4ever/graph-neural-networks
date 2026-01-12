@@ -21,7 +21,9 @@ class GINLayer(MessagePassing):
     mlp: MLP
 
     def __init__(self, mf: ModelFactory, in_dims: int, out_dims: int):
-        super(GINLayer, self).__init__(aggr = "add") # for GIN aggregation function is always add
+        # for GIN aggregation function is always add
+        # node_dim=0 because the first dimension of X is the node index
+        super(GINLayer, self).__init__(aggr="add", node_dim=0)
         self.eps = nn.Parameter(data=torch.randn(1))
         self.mlp = mf.create_mlp(in_dims, out_dims)
 
@@ -32,7 +34,7 @@ class GINLayer(MessagePassing):
         return self.mlp(Z, mask=mask)
     
     def message(self, X_j: torch.Tensor) -> torch.Tensor:
-        return F.relu(X_j)
+        return X_j
 
     @property
     def out_dims(self) -> int:
@@ -43,11 +45,12 @@ class GIN(nn.Module):
     layers: nn.ModuleList
     batch_norms: Optional[nn.ModuleList]
 
-    def __init__(self, mf: ModelFactory):
+    def __init__(self, mf: ModelFactory, residual: bool = False):
         super(GIN, self).__init__()
         self.layers = nn.ModuleList()
         self.batch_norms = nn.ModuleList() if mf.hp.gin_sample_aggregator_bn else None
-
+        self.residual = residual
+        
         in_dims = mf.hp.pearl_mlp_out
         for _ in range(mf.hp.n_sample_aggr_layers - 1):
             self.layers.append(GINLayer(mf, in_dims, mf.hp.sample_aggr_hidden_dims))
@@ -66,13 +69,16 @@ class GIN(nn.Module):
                 X[~mask] = 0
 
             if self.batch_norms is not None and i < len(self.layers) - 1:
-                assert not X.ndim == 3
-                if mask is not None:
-                    X[mask] = self.batch_norms[i](X[mask])
+                if mask is None:
+                    if X.ndim == 3:
+                        X = self.batch_norms[i](X.transpose(2, 1)).transpose(2, 1)
+                    else:
+                        X = self.batch_norms[i](X)
                 else:
-                    X = self.batch_norms[i](X)
+                    X[mask] = self.batch_norms[i](X[mask])
 
-            X = X + X0
+            if self.residual:
+                X = X + X0
         return X
 
     @property

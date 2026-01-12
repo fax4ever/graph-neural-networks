@@ -47,7 +47,7 @@ uv run script/main_zinc.py
 uv run pytest
 ```
 
-## *Alternative* Visualize dataset: Deep Learning Sapienza Hackaton dataset
+## *Alternative* Visualize dataset: Deep Learning Sapienza Hackathon dataset
 
 Download the dataset and copy the folders (A/B/C/D) at the root of this subproject (graph-neural-networks/pearl-gnn):
 

@@ -115,7 +115,7 @@ class ModelSupport:
         total_correct = 0
 
         for self.curr_batch, batch in enumerate(eval_loader, 1):
-            batch_loss, batch_prediction = self.model.evaluate_batch(batch)
+            batch_loss, batch_prediction = self.evaluate_batch(batch)
             total_loss += batch_loss
             total_correct += (batch_prediction ==  batch.y).sum().item()
 
@@ -136,13 +136,13 @@ class ModelSupport:
         # @fax4ever:
         # multiplying the loss by the batch size I think we make the criterion
         # consistent with the metric reduction (sum)
-        return loss * batch.y.size(0), output.argmax(dim=1)
+        return loss * batch.y.size(0), output
 
 
     def evaluate_batch(self, batch: Batch) -> float:
         with torch.no_grad():
             output = self.model(batch)
-        return self.metric(output, batch.y).item(), output.argmax(dim=1)    
+        return self.metric(output, batch.y).item(), output 
 
 
     def save_checkpoint(self, current_epoch):

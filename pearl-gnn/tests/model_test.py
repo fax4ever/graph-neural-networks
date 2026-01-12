@@ -108,5 +108,5 @@ class TestModel:
         model_factory = ModelFactory(hyper_param)
         model = ModelSupport(model_factory, lr_lambda)
 
-        # model.train_epoch(loader)
+        model.train_epoch(loader)
 

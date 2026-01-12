@@ -25,7 +25,9 @@ class GINELayer(MessagePassing):
     mlp: MLP
 
     def __init__(self, mf: ModelFactory, in_dims: int, out_dims: int):
-        super(GINELayer, self).__init__(aggr = "add") # for GIN aggregation function is always add
+        # for GIN aggregation function is always add
+        # node_dim=0 because the first dimension of X is the node index
+        super(GINELayer, self).__init__(aggr = "add", node_dim=0) 
         self.edge_features = nn.Embedding(mf.hp.n_edge_types+1, in_dims)
         self.pe_embedding = mf.create_mlp(mf.hp.pe_dims, in_dims)
         self.eps = nn.Parameter(data=torch.randn(1))
@@ -34,7 +36,7 @@ class GINELayer(MessagePassing):
     def forward(self, X_n: torch.Tensor, edge_index: torch.Tensor, edge_attr: torch.Tensor,
                 PE: torch.Tensor) -> torch.Tensor:
         X_e = self.edge_features(edge_attr)
-        X_e = X_e * self.pe_embedding(PE)
+        X_n = X_n + self.pe_embedding(PE)
         S = self.propagate(edge_index, X=X_n, X_e=X_e)
         Z = (1 + self.eps) * X_n
         Z = Z + S

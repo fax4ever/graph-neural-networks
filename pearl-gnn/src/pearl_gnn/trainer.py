@@ -51,7 +51,7 @@ class Trainer:
             train_loss, _ = self.model.train_epoch(self.train_loader)
             val_loss, _ = self.model.evaluate_epoch(self.val_loader)
             test_loss, _ = self.model.evaluate_epoch(self.test_loader)
-            self.model.append_epoch_data(train_loss, val_loss, test_loss)
+            self.model.append_epoch_data(train_loss, val_loss, test_loss, self.curr_epoch, self.hp.num_epochs)
 
         self.model.plot_training()
 

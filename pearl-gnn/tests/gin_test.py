@@ -34,7 +34,7 @@ class TestGIN:
         
         # 3D tensor: (batch, nodes, features) instead of (nodes, features)
         X = torch.randn(4, 10, 40)
-        edge_index = torch.tensor([[0, 1, 2, 5], [1, 2, 3, 0]])
+        edge_index = torch.tensor([[0, 1, 2, 2], [1, 2, 3, 0]])
         
         out = layer(X, edge_index)
         assert out.shape == (4, 10, 40)
