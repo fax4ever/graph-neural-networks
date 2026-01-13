@@ -121,10 +121,10 @@ def initial_pe(batch: Batch, basis: bool, num_samples: int) -> List[torch.Tensor
 class RandomSampleAggregator(nn.Module):
     gin: GIN
     mlp: MLP
-    running_sum: torch.Tensor
+    running_sum: torch.Tensor = 0
 
     def __init__(self, mf: ModelFactory):
-        super(BasisSampleAggregator, self).__init__()
+        super(RandomSampleAggregator, self).__init__()
         self.gin = GIN(mf)
         self.mlp = mf.create_mlp(mf.hp.pe_dims, mf.hp.pe_dims)
 

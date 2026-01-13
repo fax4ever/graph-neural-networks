@@ -37,7 +37,7 @@ class HyperParam:
 
     # Model > Positional Encoding / PEARL
     pe_dims: int = 37 # based on SPE paper by Huang et al. (2023)
-    basis: bool = True # True for B-PEARL, False for R-PEARL
+    basis: bool = False # True for B-PEARL, False for R-PEARL
     num_samples = 120 # num_samples for R-PEARL (used only if basis is false!)
     pearl_mlp_out = 37
     pearl_k: int = 7
@@ -54,7 +54,7 @@ class HyperParam:
     # Training hyperparameters
     learning_rate: float = 1e-3
     weight_decay: float = 1e-6
-    num_epochs: int = 240 #1400 in the original paper!
+    num_epochs: int = 67 #1400 in the original paper!
     n_warmup_steps: int = 100
     
     def __init__(self):
