@@ -7,6 +7,7 @@ from torch import nn
 from torch.optim.lr_scheduler import LambdaLR
 from torch_geometric.data import Batch, DataLoader
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 from pearl_gnn.model.model_factory import ModelFactory
 from pearl_gnn.model.pearl import PEARL_GNN_Model
 
@@ -97,26 +98,29 @@ class ModelSupport:
         return self.model.parameters()
 
 
-    def train_epoch(self, train_loader: DataLoader) -> float:
+    def train_epoch(self, train_loader: DataLoader, epoch: int, num_epochs: int) -> float:
         self.model.train()
         total_loss = 0.0
         total_correct = 0
 
-        for self.curr_batch, batch in enumerate(train_loader, 1):
+        pbar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs} [Train]", leave=False)
+        for self.curr_batch, batch in enumerate(pbar, 1):
             batch_loss, batch_prediction = self.train_batch(batch)
             total_loss += batch_loss
             total_correct += (batch_prediction ==  batch.y).sum().item()
+            pbar.set_postfix(loss=f"{total_loss / (self.curr_batch * train_loader.batch_size):.4f}")
 
         size = len(train_loader.dataset)
         return total_loss / size, total_correct / size
 
 
-    def evaluate_epoch(self, eval_loader: DataLoader) -> float:
+    def evaluate_epoch(self, eval_loader: DataLoader, desc: str = "Eval") -> float:
         self.model.eval()
         total_loss = 0.0
         total_correct = 0
 
-        for self.curr_batch, batch in enumerate(eval_loader, 1):
+        pbar = tqdm(eval_loader, desc=f"         [{desc}]", leave=False)
+        for self.curr_batch, batch in enumerate(pbar, 1):
             batch_loss, batch_prediction = self.evaluate_batch(batch)
             total_loss += batch_loss
             total_correct += (batch_prediction ==  batch.y).sum().item()
@@ -158,15 +162,16 @@ class ModelSupport:
     def append_epoch_data(self, train_loss, val_loss, test_loss, epoch, num_epochs):
         self.training_data.append(train_loss, val_loss, test_loss)
 
-        info = f"Epoch {epoch + 1}/{num_epochs}, Train Loss: {train_loss:.4f}, " \
-               f"Validation Loss: {val_loss:.4f}, Test Loss: {test_loss:.4f}"
+        info = f"Epoch {epoch + 1}/{num_epochs}, Train MAE: {train_loss:.4f}, " \
+               f"Val MAE: {val_loss:.4f}, Test MAE: {test_loss:.4f}"
+        print(info)
         logging.info(info)
 
-        # Save best model according to the validation set
-        if val_loss > self.best_val_loss:
+        # Save best model according to the validation set (lower is better for MAE)
+        if val_loss < self.best_val_loss:
             self.best_val_loss = val_loss
             torch.save(self.model.state_dict(), self.best_checkpoint_path)
-            print(f"Best model updated and saved at {self.best_checkpoint_path}")
+            print(f"  -> Best model updated! (Val MAE: {val_loss:.4f})")
 
 
     def load_best_checkpoint(self):

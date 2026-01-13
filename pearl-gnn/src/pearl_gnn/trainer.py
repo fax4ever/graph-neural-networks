@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 from torch_geometric.loader import DataLoader
 from torch_geometric.data import Dataset
@@ -43,14 +42,15 @@ class Trainer:
 
 
     def train_all_epochs(self):
-        logging.info(f"Total parameters: {sum(param.numel() for param in self.model.parameters())}")
-        logging.info(f"Total training steps: {self.n_total_steps}")
-        logging.info("Optimizer groups:\n" + "\n".join(group["name"] for group in self.model.optimizer.param_groups) + "\n")
+        print(f"Total parameters: {sum(param.numel() for param in self.model.parameters()):,}")
+        print(f"Total training steps: {self.n_total_steps:,}")
+        print(f"Training for {self.hp.num_epochs} epochs...")
+        print("-" * 60)
 
         for self.curr_epoch in range(self.hp.num_epochs):
-            train_loss, _ = self.model.train_epoch(self.train_loader)
-            val_loss, _ = self.model.evaluate_epoch(self.val_loader)
-            test_loss, _ = self.model.evaluate_epoch(self.test_loader)
+            train_loss, _ = self.model.train_epoch(self.train_loader, self.curr_epoch, self.hp.num_epochs)
+            val_loss, _ = self.model.evaluate_epoch(self.val_loader, desc="Val")
+            test_loss, _ = self.model.evaluate_epoch(self.test_loader, desc="Test")
             self.model.append_epoch_data(train_loss, val_loss, test_loss, self.curr_epoch, self.hp.num_epochs)
 
         self.model.plot_training()
