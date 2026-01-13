@@ -1,0 +1,276 @@
+(pearl-pe) fax@fercoli-redhat-com:~/code/graph-neural-networks/pearl-gnn$ python script/main_train.py 
+Device: cuda
+Device name: AMD Radeon RX 7800 XT
+Total parameters: 644,241
+Total training steps: 75,120
+Training for 240 epochs...
+------------------------------------------------------------
+Epoch 1/240, Train MAE: 1.0020, Val MAE: 0.7517, Test MAE: 0.7206                                                                                                                                                  
+  -> Best model updated! (Val MAE: 0.7517)
+Epoch 2/240, Train MAE: 0.5793, Val MAE: 0.4438, Test MAE: 0.4395                                                                                                                                                  
+  -> Best model updated! (Val MAE: 0.4438)
+Epoch 3/240, Train MAE: 0.4756, Val MAE: 0.4884, Test MAE: 0.4942                                                                                                                                                  
+Epoch 4/240, Train MAE: 0.4430, Val MAE: 0.4340, Test MAE: 0.4119                                                                                                                                                  
+  -> Best model updated! (Val MAE: 0.4340)
+Epoch 5/240, Train MAE: 0.4332, Val MAE: 0.3482, Test MAE: 0.3155                                                                                                                                                  
+  -> Best model updated! (Val MAE: 0.3482)
+Epoch 6/240, Train MAE: 0.4036, Val MAE: 0.3005, Test MAE: 0.2828                                                                                                                                                  
+  -> Best model updated! (Val MAE: 0.3005)
+Epoch 7/240, Train MAE: 0.4098, Val MAE: 0.3636, Test MAE: 0.3483                                                                                                                                                  
+Epoch 8/240, Train MAE: 0.3864, Val MAE: 0.3937, Test MAE: 0.3838                                                                                                                                                  
+Epoch 9/240, Train MAE: 0.3906, Val MAE: 0.2783, Test MAE: 0.2544                                                                                                                                                  
+  -> Best model updated! (Val MAE: 0.2783)
+Epoch 10/240, Train MAE: 0.3730, Val MAE: 0.2631, Test MAE: 0.2285                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.2631)
+Epoch 11/240, Train MAE: 0.3717, Val MAE: 0.3206, Test MAE: 0.2987                                                                                                                                                 
+Epoch 12/240, Train MAE: 0.3685, Val MAE: 0.8134, Test MAE: 0.8617                                                                                                                                                 
+Epoch 13/240, Train MAE: 0.3575, Val MAE: 0.3697, Test MAE: 0.3397                                                                                                                                                 
+Epoch 14/240, Train MAE: 0.3836, Val MAE: 0.4545, Test MAE: 0.4829                                                                                                                                                 
+Epoch 15/240, Train MAE: 0.4003, Val MAE: 0.3439, Test MAE: 0.3331                                                                                                                                                 
+Epoch 16/240, Train MAE: 0.3457, Val MAE: 0.3233, Test MAE: 0.2777                                                                                                                                                 
+Epoch 17/240, Train MAE: 0.3212, Val MAE: 0.2989, Test MAE: 0.2855                                                                                                                                                 
+Epoch 18/240, Train MAE: 0.3167, Val MAE: 0.2528, Test MAE: 0.2370                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.2528)
+Epoch 19/240, Train MAE: 0.3256, Val MAE: 0.2786, Test MAE: 0.2296                                                                                                                                                 
+Epoch 20/240, Train MAE: 0.3183, Val MAE: 0.2652, Test MAE: 0.2352                                                                                                                                                 
+Epoch 21/240, Train MAE: 0.3112, Val MAE: 0.2752, Test MAE: 0.2555                                                                                                                                                 
+Epoch 22/240, Train MAE: 0.2970, Val MAE: 0.2533, Test MAE: 0.2230                                                                                                                                                 
+Epoch 23/240, Train MAE: 0.3202, Val MAE: 0.2424, Test MAE: 0.2169                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.2424)
+Epoch 24/240, Train MAE: 0.3029, Val MAE: 0.2399, Test MAE: 0.2151                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.2399)
+Epoch 25/240, Train MAE: 0.2973, Val MAE: 0.2756, Test MAE: 0.2601                                                                                                                                                 
+Epoch 26/240, Train MAE: 0.2898, Val MAE: 4.8875, Test MAE: 4.8065                                                                                                                                                 
+Epoch 27/240, Train MAE: 0.2875, Val MAE: 0.2096, Test MAE: 0.1816                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.2096)
+Epoch 28/240, Train MAE: 0.2802, Val MAE: 0.2049, Test MAE: 0.1811                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.2049)
+Epoch 29/240, Train MAE: 0.2717, Val MAE: 0.2052, Test MAE: 0.1759                                                                                                                                                 
+Epoch 30/240, Train MAE: 0.2702, Val MAE: 0.2885, Test MAE: 0.2514                                                                                                                                                 
+Epoch 31/240, Train MAE: 0.2760, Val MAE: 0.2123, Test MAE: 0.1877                                                                                                                                                 
+Epoch 32/240, Train MAE: 0.2621, Val MAE: 0.2263, Test MAE: 0.2080                                                                                                                                                 
+Epoch 33/240, Train MAE: 0.2669, Val MAE: 0.3888, Test MAE: 0.3561                                                                                                                                                 
+Epoch 34/240, Train MAE: 0.2646, Val MAE: 0.2318, Test MAE: 0.2075                                                                                                                                                 
+Epoch 35/240, Train MAE: 0.2715, Val MAE: 0.1841, Test MAE: 0.1636                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.1841)
+Epoch 36/240, Train MAE: 0.2471, Val MAE: 0.2204, Test MAE: 0.1884                                                                                                                                                 
+Epoch 37/240, Train MAE: 0.2670, Val MAE: 0.2562, Test MAE: 0.2250                                                                                                                                                 
+Epoch 38/240, Train MAE: 0.2647, Val MAE: 0.7772, Test MAE: 0.8480                                                                                                                                                 
+Epoch 39/240, Train MAE: 0.2550, Val MAE: 0.2033, Test MAE: 0.1800                                                                                                                                                 
+Epoch 40/240, Train MAE: 0.2522, Val MAE: 0.3000, Test MAE: 0.2874                                                                                                                                                 
+Epoch 41/240, Train MAE: 0.2632, Val MAE: 0.2035, Test MAE: 0.1732                                                                                                                                                 
+Epoch 42/240, Train MAE: 0.2582, Val MAE: 0.2507, Test MAE: 0.2341                                                                                                                                                 
+Epoch 43/240, Train MAE: 0.2416, Val MAE: 0.2106, Test MAE: 0.1847                                                                                                                                                 
+Epoch 44/240, Train MAE: 0.2485, Val MAE: 0.1955, Test MAE: 0.1758                                                                                                                                                 
+Epoch 45/240, Train MAE: 0.2398, Val MAE: 0.1926, Test MAE: 0.1646                                                                                                                                                 
+Epoch 46/240, Train MAE: 0.2337, Val MAE: 0.1940, Test MAE: 0.1729                                                                                                                                                 
+Epoch 47/240, Train MAE: 0.2301, Val MAE: 0.1921, Test MAE: 0.1616                                                                                                                                                 
+Epoch 48/240, Train MAE: 0.2276, Val MAE: 0.2027, Test MAE: 0.1716                                                                                                                                                 
+Epoch 49/240, Train MAE: 0.2303, Val MAE: 0.2609, Test MAE: 0.2467                                                                                                                                                 
+Epoch 50/240, Train MAE: 0.2370, Val MAE: 0.1771, Test MAE: 0.1491                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.1771)
+Epoch 51/240, Train MAE: 0.2267, Val MAE: 0.2884, Test MAE: 0.2639                                                                                                                                                 
+Epoch 52/240, Train MAE: 0.2239, Val MAE: 0.1740, Test MAE: 0.1500                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.1740)
+Epoch 53/240, Train MAE: 0.2177, Val MAE: 0.1868, Test MAE: 0.1715                                                                                                                                                 
+Epoch 54/240, Train MAE: 0.2138, Val MAE: 0.2163, Test MAE: 0.2042                                                                                                                                                 
+Epoch 55/240, Train MAE: 0.2173, Val MAE: 0.2000, Test MAE: 0.1752                                                                                                                                                 
+Epoch 56/240, Train MAE: 0.2181, Val MAE: 0.1902, Test MAE: 0.1707                                                                                                                                                 
+Epoch 57/240, Train MAE: 0.2083, Val MAE: 0.2039, Test MAE: 0.2023                                                                                                                                                 
+Epoch 58/240, Train MAE: 0.2068, Val MAE: 0.1721, Test MAE: 0.1536                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.1721)
+Epoch 59/240, Train MAE: 0.1972, Val MAE: 0.1948, Test MAE: 0.1680                                                                                                                                                 
+Epoch 60/240, Train MAE: 0.2019, Val MAE: 0.1830, Test MAE: 0.1627                                                                                                                                                 
+Epoch 61/240, Train MAE: 0.1958, Val MAE: 0.1866, Test MAE: 0.1698                                                                                                                                                 
+Epoch 62/240, Train MAE: 0.1936, Val MAE: 0.2094, Test MAE: 0.1794                                                                                                                                                 
+Epoch 63/240, Train MAE: 0.2080, Val MAE: 0.1982, Test MAE: 0.1850                                                                                                                                                 
+Epoch 64/240, Train MAE: 0.1847, Val MAE: 0.1866, Test MAE: 0.1550                                                                                                                                                 
+Epoch 65/240, Train MAE: 0.2136, Val MAE: 0.1689, Test MAE: 0.1514                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.1689)
+Epoch 66/240, Train MAE: 0.1851, Val MAE: 0.2084, Test MAE: 0.1953                                                                                                                                                 
+Epoch 67/240, Train MAE: 0.1818, Val MAE: 0.1816, Test MAE: 0.1563                                                                                                                                                 
+Epoch 68/240, Train MAE: 0.1893, Val MAE: 0.1706, Test MAE: 0.1547                                                                                                                                                 
+Epoch 69/240, Train MAE: 0.1809, Val MAE: 0.1692, Test MAE: 0.1578                                                                                                                                                 
+Epoch 70/240, Train MAE: 0.1854, Val MAE: 0.2009, Test MAE: 0.1823                                                                                                                                                 
+Epoch 71/240, Train MAE: 0.1790, Val MAE: 0.1624, Test MAE: 0.1451                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.1624)
+Epoch 72/240, Train MAE: 0.1807, Val MAE: 0.1752, Test MAE: 0.1563                                                                                                                                                 
+Epoch 73/240, Train MAE: 0.1777, Val MAE: 0.1573, Test MAE: 0.1375                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.1573)
+Epoch 74/240, Train MAE: 0.1775, Val MAE: 0.1656, Test MAE: 0.1460                                                                                                                                                 
+Epoch 75/240, Train MAE: 0.1727, Val MAE: 0.1688, Test MAE: 0.1551                                                                                                                                                 
+Epoch 76/240, Train MAE: 0.1753, Val MAE: 0.1575, Test MAE: 0.1382                                                                                                                                                 
+Epoch 77/240, Train MAE: 0.1729, Val MAE: 0.1919, Test MAE: 0.1696                                                                                                                                                 
+Epoch 78/240, Train MAE: 0.1663, Val MAE: 0.1739, Test MAE: 0.1601                                                                                                                                                 
+Epoch 79/240, Train MAE: 0.1660, Val MAE: 0.1966, Test MAE: 0.1808                                                                                                                                                 
+Epoch 80/240, Train MAE: 0.1696, Val MAE: 0.1857, Test MAE: 0.1722                                                                                                                                                 
+Epoch 81/240, Train MAE: 0.1758, Val MAE: 0.1750, Test MAE: 0.1567                                                                                                                                                 
+Epoch 82/240, Train MAE: 0.1608, Val MAE: 0.1406, Test MAE: 0.1210                                                                                                                                                 
+  -> Best model updated! (Val MAE: 0.1406)
+Epoch 83/240, Train MAE: 0.1630, Val MAE: 0.1615, Test MAE: 0.1529                                                                                                                                                 
+Epoch 84/240, Train MAE: 0.1606, Val MAE: 0.1553, Test MAE: 0.1373                                                                                                                                                 
+Epoch 85/240, Train MAE: 0.1636, Val MAE: 0.1744, Test MAE: 0.1580                                                                                                                                                 
+Epoch 86/240, Train MAE: 0.1565, Val MAE: 0.1927, Test MAE: 0.1773                                                                                                                                                 
+Epoch 87/240, Train MAE: 0.1627, Val MAE: 0.1910, Test MAE: 0.1763                                                                                                                                                 
+Epoch 88/240, Train MAE: 0.1490, Val MAE: 0.1797, Test MAE: 0.1656                                                                                                                                                 
+Epoch 89/240, Train MAE: 0.1583, Val MAE: 0.1469, Test MAE: 0.1248                                                                                                                                                 
+Epoch 90/240, Train MAE: 0.1519, Val MAE: 0.1733, Test MAE: 0.1618                                                                                                                                                 
+Epoch 91/240, Train MAE: 0.1448, Val MAE: 0.1649, Test MAE: 0.1449                                                                                                                                                 
+Epoch 92/240, Train MAE: 0.1512, Val MAE: 0.1693, Test MAE: 0.1509                                                                                                                                                 
+Epoch 93/240, Train MAE: 0.1549, Val MAE: 0.1601, Test MAE: 0.1404                                                                                                                                                 
+Epoch 94/240, Train MAE: 0.1412, Val MAE: 0.1850, Test MAE: 0.1666                                                                                                                                                 
+Epoch 95/240, Train MAE: 0.1472, Val MAE: 0.1594, Test MAE: 0.1428                                                                                                                                                 
+Epoch 96/240, Train MAE: 0.1440, Val MAE: 0.1449, Test MAE: 0.1230                                                                                                                                                 
+Epoch 97/240, Train MAE: 0.1423, Val MAE: 0.1524, Test MAE: 0.1335                                                                                                                                                 
+Epoch 98/240, Train MAE: 0.1478, Val MAE: 0.1861, Test MAE: 0.1703                                                                                                                                                 
+Epoch 99/240, Train MAE: 0.1415, Val MAE: 0.1667, Test MAE: 0.1470                                                                                                                                                 
+Epoch 100/240, Train MAE: 0.1458, Val MAE: 0.1472, Test MAE: 0.1244                                                                                                                                                
+Epoch 101/240, Train MAE: 0.1417, Val MAE: 0.1589, Test MAE: 0.1469                                                                                                                                                
+Epoch 102/240, Train MAE: 0.1330, Val MAE: 0.1369, Test MAE: 0.1221                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1369)
+Epoch 103/240, Train MAE: 0.1369, Val MAE: 0.1454, Test MAE: 0.1315                                                                                                                                                
+Epoch 104/240, Train MAE: 0.1390, Val MAE: 0.1455, Test MAE: 0.1223                                                                                                                                                
+Epoch 105/240, Train MAE: 0.1333, Val MAE: 0.1349, Test MAE: 0.1083                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1349)
+Epoch 106/240, Train MAE: 0.1332, Val MAE: 0.1279, Test MAE: 0.1014                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1279)
+Epoch 107/240, Train MAE: 0.1361, Val MAE: 0.1476, Test MAE: 0.1275                                                                                                                                                
+Epoch 108/240, Train MAE: 0.1359, Val MAE: 0.1536, Test MAE: 0.1347                                                                                                                                                
+Epoch 109/240, Train MAE: 0.1383, Val MAE: 0.1407, Test MAE: 0.1222                                                                                                                                                
+Epoch 110/240, Train MAE: 0.1248, Val MAE: 0.1451, Test MAE: 0.1275                                                                                                                                                
+Epoch 111/240, Train MAE: 0.1292, Val MAE: 0.1594, Test MAE: 0.1359                                                                                                                                                
+Epoch 112/240, Train MAE: 0.1420, Val MAE: 0.1333, Test MAE: 0.1146                                                                                                                                                
+Epoch 113/240, Train MAE: 0.1285, Val MAE: 0.1469, Test MAE: 0.1323                                                                                                                                                
+Epoch 114/240, Train MAE: 0.1308, Val MAE: 0.1500, Test MAE: 0.1384                                                                                                                                                
+Epoch 115/240, Train MAE: 0.1290, Val MAE: 0.1383, Test MAE: 0.1205                                                                                                                                                
+Epoch 116/240, Train MAE: 0.1247, Val MAE: 0.1411, Test MAE: 0.1263                                                                                                                                                
+Epoch 117/240, Train MAE: 0.1301, Val MAE: 0.1649, Test MAE: 0.1615                                                                                                                                                
+Epoch 118/240, Train MAE: 0.1238, Val MAE: 0.1479, Test MAE: 0.1323                                                                                                                                                
+Epoch 119/240, Train MAE: 0.1182, Val MAE: 0.1432, Test MAE: 0.1306                                                                                                                                                
+Epoch 120/240, Train MAE: 0.1212, Val MAE: 0.1450, Test MAE: 0.1298                                                                                                                                                
+Epoch 121/240, Train MAE: 0.1208, Val MAE: 0.1520, Test MAE: 0.1419                                                                                                                                                
+Epoch 122/240, Train MAE: 0.1215, Val MAE: 0.1268, Test MAE: 0.1096                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1268)
+Epoch 123/240, Train MAE: 0.1132, Val MAE: 0.1501, Test MAE: 0.1388                                                                                                                                                
+Epoch 124/240, Train MAE: 0.1245, Val MAE: 0.1300, Test MAE: 0.1164                                                                                                                                                
+Epoch 125/240, Train MAE: 0.1179, Val MAE: 0.1664, Test MAE: 0.1554                                                                                                                                                
+Epoch 126/240, Train MAE: 0.1196, Val MAE: 0.1551, Test MAE: 0.1480                                                                                                                                                
+Epoch 127/240, Train MAE: 0.1158, Val MAE: 0.1319, Test MAE: 0.1245                                                                                                                                                
+Epoch 128/240, Train MAE: 0.1162, Val MAE: 0.1441, Test MAE: 0.1313                                                                                                                                                
+Epoch 129/240, Train MAE: 0.1123, Val MAE: 0.1502, Test MAE: 0.1430                                                                                                                                                
+Epoch 130/240, Train MAE: 0.1140, Val MAE: 0.1481, Test MAE: 0.1401                                                                                                                                                
+Epoch 131/240, Train MAE: 0.1131, Val MAE: 0.1284, Test MAE: 0.1041                                                                                                                                                
+Epoch 132/240, Train MAE: 0.1116, Val MAE: 0.1589, Test MAE: 0.1472                                                                                                                                                
+Epoch 133/240, Train MAE: 0.1128, Val MAE: 0.1318, Test MAE: 0.1149                                                                                                                                                
+Epoch 134/240, Train MAE: 0.1169, Val MAE: 0.1444, Test MAE: 0.1411                                                                                                                                                
+Epoch 135/240, Train MAE: 0.1126, Val MAE: 0.1219, Test MAE: 0.1118                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1219)
+Epoch 136/240, Train MAE: 0.1111, Val MAE: 0.1310, Test MAE: 0.1127                                                                                                                                                
+Epoch 137/240, Train MAE: 0.1116, Val MAE: 0.1403, Test MAE: 0.1278                                                                                                                                                
+Epoch 138/240, Train MAE: 0.1069, Val MAE: 0.1217, Test MAE: 0.1087                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1217)
+Epoch 139/240, Train MAE: 0.1064, Val MAE: 0.1233, Test MAE: 0.1146                                                                                                                                                
+Epoch 140/240, Train MAE: 0.1089, Val MAE: 0.1240, Test MAE: 0.1157                                                                                                                                                
+Epoch 141/240, Train MAE: 0.1053, Val MAE: 0.1533, Test MAE: 0.1498                                                                                                                                                
+Epoch 142/240, Train MAE: 0.1055, Val MAE: 0.1288, Test MAE: 0.1250                                                                                                                                                
+Epoch 143/240, Train MAE: 0.1037, Val MAE: 0.1286, Test MAE: 0.1219                                                                                                                                                
+Epoch 144/240, Train MAE: 0.1053, Val MAE: 0.1445, Test MAE: 0.1423                                                                                                                                                
+Epoch 145/240, Train MAE: 0.1042, Val MAE: 0.1306, Test MAE: 0.1260                                                                                                                                                
+Epoch 146/240, Train MAE: 0.1028, Val MAE: 0.1293, Test MAE: 0.1246                                                                                                                                                
+Epoch 147/240, Train MAE: 0.0982, Val MAE: 0.1561, Test MAE: 0.1561                                                                                                                                                
+Epoch 148/240, Train MAE: 0.1049, Val MAE: 0.1229, Test MAE: 0.1224                                                                                                                                                
+Epoch 149/240, Train MAE: 0.1000, Val MAE: 0.1349, Test MAE: 0.1341                                                                                                                                                
+Epoch 150/240, Train MAE: 0.0979, Val MAE: 0.1303, Test MAE: 0.1229                                                                                                                                                
+Epoch 151/240, Train MAE: 0.1015, Val MAE: 0.1421, Test MAE: 0.1472                                                                                                                                                
+Epoch 152/240, Train MAE: 0.0990, Val MAE: 0.1246, Test MAE: 0.1232                                                                                                                                                
+Epoch 153/240, Train MAE: 0.0957, Val MAE: 0.1178, Test MAE: 0.1113                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1178)
+Epoch 154/240, Train MAE: 0.0980, Val MAE: 0.1260, Test MAE: 0.1246                                                                                                                                                
+Epoch 155/240, Train MAE: 0.1001, Val MAE: 0.1143, Test MAE: 0.1089                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1143)
+Epoch 156/240, Train MAE: 0.0936, Val MAE: 0.1448, Test MAE: 0.1463                                                                                                                                                
+Epoch 157/240, Train MAE: 0.0972, Val MAE: 0.1420, Test MAE: 0.1450                                                                                                                                                
+Epoch 158/240, Train MAE: 0.0993, Val MAE: 0.1208, Test MAE: 0.1095                                                                                                                                                
+Epoch 159/240, Train MAE: 0.0939, Val MAE: 0.1224, Test MAE: 0.1173                                                                                                                                                
+Epoch 160/240, Train MAE: 0.0915, Val MAE: 0.1296, Test MAE: 0.1304                                                                                                                                                
+Epoch 161/240, Train MAE: 0.0914, Val MAE: 0.1223, Test MAE: 0.1181                                                                                                                                                
+Epoch 162/240, Train MAE: 0.0916, Val MAE: 0.1369, Test MAE: 0.1399                                                                                                                                                
+Epoch 163/240, Train MAE: 0.0923, Val MAE: 0.1181, Test MAE: 0.1111                                                                                                                                                
+Epoch 164/240, Train MAE: 0.0927, Val MAE: 0.1272, Test MAE: 0.1281                                                                                                                                                
+Epoch 165/240, Train MAE: 0.0883, Val MAE: 0.1181, Test MAE: 0.1191                                                                                                                                                
+Epoch 166/240, Train MAE: 0.0930, Val MAE: 0.1432, Test MAE: 0.1403                                                                                                                                                
+Epoch 167/240, Train MAE: 0.0874, Val MAE: 0.1065, Test MAE: 0.1081                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1065)
+Epoch 168/240, Train MAE: 0.0884, Val MAE: 0.1294, Test MAE: 0.1365                                                                                                                                                
+Epoch 169/240, Train MAE: 0.0868, Val MAE: 0.1149, Test MAE: 0.1108                                                                                                                                                
+Epoch 170/240, Train MAE: 0.0846, Val MAE: 0.1137, Test MAE: 0.1152                                                                                                                                                
+Epoch 171/240, Train MAE: 0.0872, Val MAE: 0.1113, Test MAE: 0.1068                                                                                                                                                
+Epoch 172/240, Train MAE: 0.0844, Val MAE: 0.1345, Test MAE: 0.1386                                                                                                                                                
+Epoch 173/240, Train MAE: 0.0857, Val MAE: 0.1231, Test MAE: 0.1163                                                                                                                                                
+Epoch 174/240, Train MAE: 0.0879, Val MAE: 0.1235, Test MAE: 0.1274                                                                                                                                                
+Epoch 175/240, Train MAE: 0.0841, Val MAE: 0.1472, Test MAE: 0.1516                                                                                                                                                
+Epoch 176/240, Train MAE: 0.0832, Val MAE: 0.1293, Test MAE: 0.1380                                                                                                                                                
+Epoch 177/240, Train MAE: 0.0875, Val MAE: 0.1257, Test MAE: 0.1303                                                                                                                                                
+Epoch 178/240, Train MAE: 0.0831, Val MAE: 0.1169, Test MAE: 0.1135                                                                                                                                                
+Epoch 179/240, Train MAE: 0.0846, Val MAE: 0.1175, Test MAE: 0.1169                                                                                                                                                
+Epoch 180/240, Train MAE: 0.0845, Val MAE: 0.1165, Test MAE: 0.1155                                                                                                                                                
+Epoch 181/240, Train MAE: 0.0808, Val MAE: 0.1143, Test MAE: 0.1155                                                                                                                                                
+Epoch 182/240, Train MAE: 0.0803, Val MAE: 0.1300, Test MAE: 0.1287                                                                                                                                                
+Epoch 183/240, Train MAE: 0.0819, Val MAE: 0.1143, Test MAE: 0.1126                                                                                                                                                
+Epoch 184/240, Train MAE: 0.0779, Val MAE: 0.1119, Test MAE: 0.1103                                                                                                                                                
+Epoch 185/240, Train MAE: 0.0798, Val MAE: 0.1398, Test MAE: 0.1385                                                                                                                                                
+Epoch 186/240, Train MAE: 0.0791, Val MAE: 0.1189, Test MAE: 0.1192                                                                                                                                                
+Epoch 187/240, Train MAE: 0.0784, Val MAE: 0.1116, Test MAE: 0.1117                                                                                                                                                
+Epoch 188/240, Train MAE: 0.0785, Val MAE: 0.1179, Test MAE: 0.1222                                                                                                                                                
+Epoch 189/240, Train MAE: 0.0773, Val MAE: 0.1003, Test MAE: 0.0981                                                                                                                                                
+  -> Best model updated! (Val MAE: 0.1003)
+Epoch 190/240, Train MAE: 0.0770, Val MAE: 0.1063, Test MAE: 0.1066   
+Epoch 191/240, Train MAE: 0.0741, Val MAE: 0.1449, Test MAE: 0.1432   
+Epoch 192/240, Train MAE: 0.0784, Val MAE: 0.1228, Test MAE: 0.1232   
+Epoch 193/240, Train MAE: 0.0785, Val MAE: 0.1139, Test MAE: 0.1110   
+Epoch 194/240, Train MAE: 0.0737, Val MAE: 0.1122, Test MAE: 0.1096   
+Epoch 195/240, Train MAE: 0.0767, Val MAE: 0.1090, Test MAE: 0.1062   
+Epoch 196/240, Train MAE: 0.0743, Val MAE: 0.1151, Test MAE: 0.1180   
+Epoch 197/240, Train MAE: 0.0719, Val MAE: 0.1184, Test MAE: 0.1201   
+Epoch 198/240, Train MAE: 0.0731, Val MAE: 0.1183, Test MAE: 0.1179   
+Epoch 199/240, Train MAE: 0.0748, Val MAE: 0.1065, Test MAE: 0.1029   
+Epoch 200/240, Train MAE: 0.0741, Val MAE: 0.1160, Test MAE: 0.1137   
+Epoch 201/240, Train MAE: 0.0736, Val MAE: 0.1067, Test MAE: 0.1056   
+Epoch 202/240, Train MAE: 0.0727, Val MAE: 0.1185, Test MAE: 0.1154   
+Epoch 203/240, Train MAE: 0.0695, Val MAE: 0.1208, Test MAE: 0.1223   
+Epoch 204/240, Train MAE: 0.0705, Val MAE: 0.1208, Test MAE: 0.1241   
+Epoch 205/240, Train MAE: 0.0699, Val MAE: 0.1147, Test MAE: 0.1145   
+Epoch 206/240, Train MAE: 0.0675, Val MAE: 0.1330, Test MAE: 0.1309   
+Epoch 207/240, Train MAE: 0.0684, Val MAE: 0.1182, Test MAE: 0.1202   
+Epoch 208/240, Train MAE: 0.0705, Val MAE: 0.1113, Test MAE: 0.1084   
+Epoch 209/240, Train MAE: 0.0711, Val MAE: 0.1047, Test MAE: 0.1027   
+Epoch 210/240, Train MAE: 0.0654, Val MAE: 0.1122, Test MAE: 0.1132   
+Epoch 211/240, Train MAE: 0.0690, Val MAE: 0.1062, Test MAE: 0.1076   
+Epoch 212/240, Train MAE: 0.0676, Val MAE: 0.1245, Test MAE: 0.1280   
+Epoch 213/240, Train MAE: 0.0672, Val MAE: 0.1173, Test MAE: 0.1194   
+Epoch 214/240, Train MAE: 0.0659, Val MAE: 0.1203, Test MAE: 0.1242   
+Epoch 215/240, Train MAE: 0.0641, Val MAE: 0.1200, Test MAE: 0.1238   
+Epoch 216/240, Train MAE: 0.0661, Val MAE: 0.1147, Test MAE: 0.1151   
+Epoch 217/240, Train MAE: 0.0649, Val MAE: 0.1107, Test MAE: 0.1114   
+Epoch 218/240, Train MAE: 0.0636, Val MAE: 0.1035, Test MAE: 0.1041   
+Epoch 219/240, Train MAE: 0.0659, Val MAE: 0.1112, Test MAE: 0.1119   
+Epoch 220/240, Train MAE: 0.0619, Val MAE: 0.1132, Test MAE: 0.1176   
+Epoch 221/240, Train MAE: 0.0656, Val MAE: 0.1070, Test MAE: 0.1079   
+Epoch 222/240, Train MAE: 0.0625, Val MAE: 0.1153, Test MAE: 0.1182   
+Epoch 223/240, Train MAE: 0.0629, Val MAE: 0.1062, Test MAE: 0.1069   
+Epoch 224/240, Train MAE: 0.0644, Val MAE: 0.1343, Test MAE: 0.1369   
+Epoch 225/240, Train MAE: 0.0635, Val MAE: 0.1160, Test MAE: 0.1177   
+Epoch 226/240, Train MAE: 0.0626, Val MAE: 0.1089, Test MAE: 0.1073   
+Epoch 227/240, Train MAE: 0.0649, Val MAE: 0.1070, Test MAE: 0.1078   
+Epoch 228/240, Train MAE: 0.0629, Val MAE: 0.1250, Test MAE: 0.1279   
+Epoch 229/240, Train MAE: 0.0627, Val MAE: 0.1177, Test MAE: 0.1190   
+Epoch 230/240, Train MAE: 0.0611, Val MAE: 0.1177, Test MAE: 0.1213   
+Epoch 231/240, Train MAE: 0.0599, Val MAE: 0.1093, Test MAE: 0.1109   
+Epoch 232/240, Train MAE: 0.0600, Val MAE: 0.1092, Test MAE: 0.1129   
+Epoch 233/240, Train MAE: 0.0595, Val MAE: 0.1029, Test MAE: 0.1040   
+Epoch 234/240, Train MAE: 0.0591, Val MAE: 0.1191, Test MAE: 0.1239   
+Epoch 235/240, Train MAE: 0.0615, Val MAE: 0.1151, Test MAE: 0.1186   
+Epoch 236/240, Train MAE: 0.0571, Val MAE: 0.1183, Test MAE: 0.1206   
+Epoch 237/240, Train MAE: 0.0582, Val MAE: 0.1108, Test MAE: 0.1122   
+Epoch 238/240, Train MAE: 0.0553, Val MAE: 0.1030, Test MAE: 0.1036   
+Epoch 239/240, Train MAE: 0.0561, Val MAE: 0.1097, Test MAE: 0.1109   

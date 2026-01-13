@@ -54,7 +54,7 @@ class HyperParam:
     # Training hyperparameters
     learning_rate: float = 1e-3
     weight_decay: float = 1e-6
-    num_epochs: int = 2 #1400 in the original paper!
+    num_epochs: int = 240 #1400 in the original paper!
     n_warmup_steps: int = 100
     
     def __init__(self):
