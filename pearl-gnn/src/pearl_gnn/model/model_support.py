@@ -89,6 +89,7 @@ class ModelSupport:
         self.checkpoint_path = os.path.join(checkpoint_dir, f"model_{test_dir_name}")
         self.best_checkpoint_path = os.path.join(base_dir, "checkpoints", f"{model_name}_{test_dir_name}_best.pth")
         self.logs_path = os.path.join(base_dir, "logs", test_dir_name)
+        os.makedirs(self.logs_path, exist_ok=True)
         self.training_data = ModelTrainingData()
         # We select the model that has the lowest validation loss as in the original paper
         self.best_val_loss = 999.0 # 999.0 is used in the orginal paper

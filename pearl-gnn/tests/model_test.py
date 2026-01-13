@@ -108,5 +108,13 @@ class TestModel:
         model_factory = ModelFactory(hyper_param)
         model = ModelSupport(model_factory, lr_lambda)
 
-        model.train_epoch(loader)
+        model.train_epoch(loader, 1, 1)
 
+
+    def test_plot(self):
+        model_factory = ModelFactory(hyper_param)
+        model = ModelSupport(model_factory, lr_lambda)
+        model.append_epoch_data(2.0,1.5,1.5,1,3)
+        model.append_epoch_data(1.5,1.0,1.0,2,3)
+        model.append_epoch_data(1.0,0.5,0.5,3,3)
+        model.plot_training()
