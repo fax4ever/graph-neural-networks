@@ -1,5 +1,17 @@
 # Main project
 
+@misc{kanatsoulis2025learningefficientpositionalencodings,
+      title={Learning Efficient Positional Encodings with Graph Neural Networks}, 
+      author={Charilaos I. Kanatsoulis and Evelyn Choi and Stephanie Jegelka and Jure Leskovec and Alejandro Ribeiro},
+      year={2025},
+      eprint={2502.01122},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2502.01122}, 
+}
+
+Reimplementation of PEARL. Tested only on ZINC dataset.
+
 ```bash
 uv sync
 ```
@@ -13,7 +25,7 @@ uv run script/main_train.py
 conda create -n pearl-pe python=3.13
 conda activate pearl-pe
 pip install torch pytorch-triton-rocm --index-url https://download.pytorch.org/whl/rocm6.2.4
-pip install numpy matplotlib networkx torch-geometric
+pip install numpy matplotlib networkx torch-geometric ipykernel
 conda install conda-forge::pytest
 pip install -e . --no-deps  # Install only the package code in editable mode (no dependencies)
 pytest
