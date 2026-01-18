@@ -26,6 +26,8 @@ conda create -n pearl-pe python=3.13
 conda activate pearl-pe
 pip install torch pytorch-triton-rocm --index-url https://download.pytorch.org/whl/rocm6.2.4
 pip install numpy matplotlib networkx torch-geometric ipykernel
+conda install -n pearl-pe ipywidgets -y
+conda run -n pearl-pe jupyter nbextension enable --py widgetsnbextension --sys-prefix
 conda install conda-forge::pytest
 pip install -e . --no-deps  # Install only the package code in editable mode (no dependencies)
 pytest

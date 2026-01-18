@@ -37,7 +37,7 @@ class HyperParam:
 
     # Model > Positional Encoding / PEARL
     pe_dims: int = 37 # based on SPE paper by Huang et al. (2023)
-    basis: bool = False # True for B-PEARL, False for R-PEARL
+    basis: bool = True # True for B-PEARL, False for R-PEARL
     num_samples = 120 # num_samples for R-PEARL (used only if basis is false!)
     pearl_mlp_out = 37
     pearl_k: int = 7

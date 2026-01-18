@@ -217,7 +217,7 @@ class PEARLPositionalEncoder(nn.Module):
     def __init__(self, mf: ModelFactory):
         super(PEARLPositionalEncoder, self).__init__()
         self.sample_aggr = BasisSampleAggregator(mf) if mf.hp.basis else RandomSampleAggregator(mf)
-        self.layers = nn.ModuleList([nn.Linear(mf.hp.pearl_k if i==0 else mf.hp.pearl_k, 
+        self.layers = nn.ModuleList([nn.Linear(mf.hp.pearl_k if i==0 else mf.hp.pearl_mlp_hid, 
             mf.hp.pearl_mlp_hid if i<mf.hp.pearl_mlp_nlayers-1 else mf.hp.pearl_mlp_out) 
             for i in range(mf.hp.pearl_mlp_nlayers)])
         self.norms = nn.ModuleList([nn.BatchNorm1d(mf.hp.pearl_mlp_hid if i<mf.hp.pearl_mlp_nlayers-1 else mf.hp.pearl_mlp_out) 
