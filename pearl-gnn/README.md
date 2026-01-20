@@ -20,6 +20,11 @@ uv sync
 uv run script/main_train.py
 ```
 
+## Slides
+
+[PEARL & Positional Encodings in Graph Neural Networks.pptx](PEARL%20%26%20Positional%20Encodings%20in%20Graph%20Neural%20Networks.pptx)
+
+
 # Alternative installation: ROCm + conda
 
 conda create -n pearl-pe python=3.13
